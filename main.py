@@ -377,36 +377,33 @@ class FeatureSelection:
         return X_high_variance
     
     def chi_square_selector(self,X, y):
-        X_selected = SelectKBest(chi2).fit_transform(X, y)
+        selector = SelectKBest(chi2)
+        X_selected = selector.fit_transform(X, y)
         return X_selected
     
     def mutual_information_selector(self,X, y):
-        X_selected = SelectKBest(mutual_info_classif).fit_transform(X, y)
+        selector = SelectKBest(mutual_info_classif)
+        X_selected = selector.fit_transform(X, y)
         return X_selected
     
     def anova_selector(self,X, y):
-        X_selected = SelectKBest(f_classif).fit_transform(X, y)
+        selector = SelectKBest(f_classif)
+        X_selected = selector.fit_transform(X, y)
         return X_selected
     
     def rfe_selector(self,X, y, n_features=5):
         model = RandomForestClassifier()
         rfe = RFE(model, n_features_to_select=n_features)
-        X_rfe = rfe.fit_transform(X, y)
+        rfe.fit_transform(X, y)
         return rfe.ranking_
     
     def efs_selector(self, X, y):
-        l_regressor = RandomForestClassifier()
-
-        efs_lr = EFS(l_regressor,
-             min_features=1,
-             max_features=X.shape[1],
-             scoring='neg_mean_squared_error',
-             cv=5)
+        model = RandomForestClassifier()
+        efs_lr = EFS(model, min_features=1, max_features=X.shape[1], scoring='neg_mean_squared_error', cv=5)
         efs_lr = efs_lr.fit(X, y)
-
-        return efs_lr.best_feature_names_, efs_lr.best_score_, 
+        return efs_lr.best_idx_
         
-    def l1_regularization_selector(self,X, y):
+    def lasso_selector(self,X, y):
         model = Lasso()
         model.fit(X, y)
         selected_features = np.where(model.coef_ != 0)[0]
