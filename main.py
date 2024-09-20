@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import joblib
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 
 from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.preprocessing import PolynomialFeatures
@@ -23,6 +23,8 @@ from sklearn_extra.cluster import KMedoids
 from sklearn.mixture import GaussianMixture
 from sklearn.metrics import adjusted_mutual_info_score, adjusted_rand_score, calinski_harabasz_score, completeness_score, davies_bouldin_score, fowlkes_mallows_score, homogeneity_score, mutual_info_score, normalized_mutual_info_score, rand_score, silhouette_score, v_measure_score
 from sklearn.metrics.cluster import contingency_matrix
+
+from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif, RFE, ExhaustiveFeatureSelector as EFS
 
 class Regression:
     def __init__(self, dataset_path, target_variable, output_path):
@@ -363,3 +365,49 @@ class Clustering:
         # self.performance(self, y_pred)
 
         self.save_model(self, model)
+
+class FeatureSelection:
+    def __init__(self,feature_matrix,target_vector):
+        self.X = feature_matrix
+        self.y = target_vector
+        
+    def variance_threshold_selector(self,X):
+        selector = VarianceThreshold()
+        X_high_variance = selector.fit_transform(X)
+        return X_high_variance
+    
+    def chi_square_selector(self,X, y):
+        X_selected = SelectKBest(chi2).fit_transform(X, y)
+        return X_selected
+    
+    def mutual_information_selector(self,X, y):
+        X_selected = SelectKBest(mutual_info_classif).fit_transform(X, y)
+        return X_selected
+    
+    def anova_selector(self,X, y):
+        X_selected = SelectKBest(f_classif).fit_transform(X, y)
+        return X_selected
+    
+    def rfe_selector(self,X, y, n_features=5):
+        model = RandomForestClassifier()
+        rfe = RFE(model, n_features_to_select=n_features)
+        X_rfe = rfe.fit_transform(X, y)
+        return rfe.ranking_
+    
+    def efs_selector(self, X, y):
+        l_regressor = RandomForestClassifier()
+
+        efs_lr = EFS(l_regressor,
+             min_features=1,
+             max_features=X.shape[1],
+             scoring='neg_mean_squared_error',
+             cv=5)
+        efs_lr = efs_lr.fit(X, y)
+
+        return efs_lr.best_feature_names_, efs_lr.best_score_, 
+        
+    def l1_regularization_selector(self,X, y):
+        model = Lasso()
+        model.fit(X, y)
+        selected_features = np.where(model.coef_ != 0)[0]
+        return X[:, selected_features], selected_features
