@@ -1,6 +1,7 @@
-fastapi
 numpy
 pandas
-sklearn
+openpyxl
+scikit-learn
 joblib
+fastapi
 uvicorn
