@@ -295,21 +295,6 @@ class Clustering:
     
     def save_model(self, model):
         joblib.dump(model, self.model_path)
-
-    # def performance(self, y_test, y_pred):
-    #     amis = adjusted_mutual_info_score(y_test, y_pred)
-    #     ars = adjusted_rand_score(y_test, y_pred)
-    #     chs = calinski_harabasz_score(y_test, y_pred)
-    #     cm = contingency_matrix(y_test, y_pred)
-    #     cs = completeness_score(y_test, y_pred)
-    #     dbs = davies_bouldin_score(y_test, y_pred)
-    #     fms = fowlkes_mallows_score(y_test, y_pred)
-    #     hs = homogeneity_score(y_test, y_pred)
-    #     mis = mutual_info_score(y_test, y_pred)
-    #     nmis = normalized_mutual_info_score(y_test, y_pred)
-    #     rs = rand_score(y_test, y_pred)
-    #     ss = silhouette_score(y_test, y_pred)
-    #     vms = v_measure_score(y_test, y_pred)
     
     def k_means_clustering(self):
         X = self.preprocessing(self)
@@ -317,10 +302,9 @@ class Clustering:
         model = KMeans(init="k-means++", algorithm="elkan", random_state=42)
         model.fit(X)
         
-        y_pred = model.predict(X)
-        # self.performance(self, y_pred)
-
         self.save_model(self, model)
+
+        return model.labels_
 
     def k_medoids_clustering(self):
         X = self.preprocessing(self)
@@ -328,10 +312,9 @@ class Clustering:
         model = KMedoids(init="k-medoids++", random_state=42)
         model.fit(X)
         
-        y_pred = model.predict(X)
-        # self.performance(self, y_test, y_pred)
-
         self.save_model(self, model)
+
+        return model.labels_
 
     def dbscan_clustering(self):
         X = self.preprocessing(self)
@@ -339,10 +322,10 @@ class Clustering:
         model = DBSCAN(metric="manhattan", algorithm="auto")
         model.fit(X)
         
-        y_pred = model.labels_
-        # self.performance(self)
-
         self.save_model(self, model)
+
+        return model.labels_
+
 
     def agglomerative_clustering(self):
         X = self.preprocessing(self)
@@ -350,10 +333,9 @@ class Clustering:
         model = AgglomerativeClustering(metric="manhattan", linkage="ward")
         model.fit(X)
 
-        y_pred = model.labels_
-        # self.performance(self)
-
         self.save_model(self, model)
+
+        return model.labels_
 
     def gaussian_mixture_clustering(self):
         X = self.preprocessing(self)
@@ -361,10 +343,10 @@ class Clustering:
         model = GaussianMixture(init_params="k-means++", random_state=42)
         model.fit(X)
 
-        y_pred = model.labels_
-        # self.performance(self)
-
         self.save_model(self, model)
+
+        return model.labels_
+
 
 class FeatureSelection:
     def __init__(self,feature_matrix,target_vector):
@@ -399,11 +381,11 @@ class FeatureSelection:
     
     def efs_selector(self, X, y):
         model = RandomForestClassifier()
-        efs_lr = ExhaustiveFeatureSelector(model, min_features=1, max_features=X.shape[1], scoring='neg_mean_squared_error', cv=5)
-        efs_lr = efs_lr.fit(X, y)
-        return efs_lr.best_idx_
+        efs = ExhaustiveFeatureSelector(model, min_features=1, max_features=X.shape[1], scoring='neg_mean_squared_error', cv=5)
+        efs = efs.fit(X, y)
+        return efs.best_idx_
         
-    def lasso_selector(self,X, y):
+    def lasso_selector(self, X, y):
         model = Lasso()
         model.fit(X, y)
         selected_features = np.where(model.coef_ != 0)[0]
