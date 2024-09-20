@@ -373,20 +373,34 @@ class FeatureSelection:
         X_selected = selector.fit_transform(X, y)
         return X_selected
     
-    def rfe_selector(self,X, y, n_features=5):
-        model = RandomForestClassifier()
-        rfe = RFE(model, n_features_to_select=n_features)
-        rfe.fit_transform(X, y)
-        return rfe.ranking_
-    
-    def efs_selector(self, X, y):
-        model = RandomForestClassifier()
-        efs = ExhaustiveFeatureSelector(model, min_features=1, max_features=X.shape[1], scoring='neg_mean_squared_error', cv=5)
-        efs = efs.fit(X, y)
-        return efs.best_idx_
-        
     def lasso_selector(self, X, y):
         model = Lasso()
         model.fit(X, y)
         selected_features = np.where(model.coef_ != 0)[0]
         return X[:, selected_features], selected_features
+    
+    '''
+    def rfe_selector(self,X, y, n_features=5):
+        model = RandomForestRegressor(criterion="friedman_mse", random_state=42)
+        rfe = RFE(model, n_features_to_select=n_features)
+        rfe.fit_transform(X, y)
+        return rfe.ranking_
+    
+    def rfe_selector(self,X, y, n_features=5):
+        model = RandomForestClassifier(criterion="entropy", random_state=42)
+        rfe = RFE(model, n_features_to_select=n_features)
+        rfe.fit_transform(X, y)
+        return rfe.ranking_
+    
+    def efs_selector(self, X, y):
+        model = RandomForestRegressor(criterion="friedman_mse", random_state=42)
+        efs = ExhaustiveFeatureSelector(model, min_features=1, max_features=X.shape[1], scoring='neg_mean_squared_error', cv=5)
+        efs = efs.fit(X, y)
+        return efs.best_idx_
+    
+    def efs_selector(self, X, y):
+        model = RandomForestClassifier(criterion="entropy", random_state=42)
+        efs = ExhaustiveFeatureSelector(model, min_features=1, max_features=X.shape[1], scoring='neg_mean_squared_error', cv=5)
+        efs = efs.fit(X, y)
+        return efs.best_idx_
+    '''
