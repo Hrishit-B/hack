@@ -18,13 +18,13 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score, balanced_accuracy_score, precision_score, average_precision_score, recall_score, jaccard_score, f1_score, roc_auc_score
 
-from sklearn.cluster import KMeans, DBSCAN, Birch, AffinityPropagation, MeanShift, OPTICS, AgglomerativeClustering
+from sklearn.cluster import KMeans, DBSCAN,AgglomerativeClustering
 from sklearn_extra.cluster import KMedoids
 from sklearn.mixture import GaussianMixture
-from sklearn.metrics import adjusted_mutual_info_score, adjusted_rand_score, calinski_harabasz_score, completeness_score, davies_bouldin_score, fowlkes_mallows_score, homogeneity_score, mutual_info_score, normalized_mutual_info_score, rand_score, silhouette_score, v_measure_score
 from sklearn.metrics.cluster import contingency_matrix
+from sklearn.metrics import adjusted_mutual_info_score, adjusted_rand_score, calinski_harabasz_score, completeness_score, davies_bouldin_score, fowlkes_mallows_score, homogeneity_score, mutual_info_score, normalized_mutual_info_score, rand_score, silhouette_score, v_measure_score
 
-from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif, RFE, ExhaustiveFeatureSelector as EFS
+from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif, RFE, ExhaustiveFeatureSelector
 
 class Regression:
     def __init__(self, dataset_path, target_variable, output_path):
@@ -344,25 +344,25 @@ class Clustering:
 
         self.save_model(self, model)
 
-    def Gaussian_Mixture_Model(self):
+    def agglomerative_clustering(self):
         X = self.preprocessing(self)
-        
-        model = GaussianMixture(n_components=3, random_state=42)
+
+        model = AgglomerativeClustering(metric="manhattan", linkage="ward")
         model.fit(X)
-        
-        y_pred = model.predict(X)
-        # self.performance(self, y_pred)
+
+        y_pred = model.labels_
+        # self.performance(self)
 
         self.save_model(self, model)
 
-    def Agglomerative_Hierarchy(self):
+    def gaussian_mixture_clustering(self):
         X = self.preprocessing(self)
-        
-        model = AgglomerativeClustering(n_clusters=3, affinity='euclidean', linkage='ward')
+
+        model = GaussianMixture(init_params="k-means++", random_state=42)
         model.fit(X)
-        
+
         y_pred = model.labels_
-        # self.performance(self, y_pred)
+        # self.performance(self)
 
         self.save_model(self, model)
 
@@ -399,7 +399,7 @@ class FeatureSelection:
     
     def efs_selector(self, X, y):
         model = RandomForestClassifier()
-        efs_lr = EFS(model, min_features=1, max_features=X.shape[1], scoring='neg_mean_squared_error', cv=5)
+        efs_lr = ExhaustiveFeatureSelector(model, min_features=1, max_features=X.shape[1], scoring='neg_mean_squared_error', cv=5)
         efs_lr = efs_lr.fit(X, y)
         return efs_lr.best_idx_
         
