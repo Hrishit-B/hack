@@ -18,6 +18,11 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score, balanced_accuracy_score, precision_score, average_precision_score, recall_score, jaccard_score, f1_score, roc_auc_score
 
+from sklearn.metrics import adjusted_mutual_info_score, adjusted_rand_score, calinski_harabasz_score, completeness_score, davies_bouldin_score, fowlkes_mallows_score, homogeneity_score, mutual_info_score, normalized_mutual_info_score, rand_score, silhouette_score, v_measure_score
+from sklearn.metrics.cluster import contingency_matrix
+from sklearn.cluster import KMeans, DBSCAN, Birch, AffinityPropagation, MeanShift, OPTICS, AgglomerativeClustering
+from sklearn.mixture import GaussianMixture
+
 class Regression:
     def __init__(self, dataset_path, target_variable, output_path):
         self.dataset_path = dataset_path
@@ -269,6 +274,158 @@ class Classification:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
+        self.performance(self, y_test, y_pred)
+
+        self.save_model(self, model)
+        
+from sklearn.base import accuracy_score
+from sklearn.cluster import KMeans, DBSCAN, Birch, AffinityPropagation, MeanShift, OPTICS, AgglomerativeClustering
+from sklearn.mixture import GaussianMixture
+
+class Clusstering:
+    def __init__(self, dataset_path, target_variable, output_path):
+        self.dataset_path = dataset_path
+        self.target_variable = target_variable
+        self.output_path = output_path
+        
+    def load_dataset(self):
+        try:
+            try:
+                dataset = pd.read_csv(self.dataset_path)
+            except:
+                pass
+
+            try:
+                dataset = pd.read_excel(self.dataset_path)
+            except:
+                pass
+
+            return dataset
+        
+        except FileNotFoundError:
+            print("File {} not found".format(self.dataset_path))
+            return None
+        
+        except:
+            print("Some error has occured")
+            return None
+    
+    def preprocessing(self):
+        dataset = self.load_dataset()
+        if dataset is not None:
+            X = dataset.drop(self.target_variable, axis=1)
+            y = dataset[self.target_variable]
+
+            scaler = StandardScaler()
+            X_scaled = scaler.fit_transform(X)
+        
+            X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+            return X_train, X_test, y_train, y_test
+        else:
+            return
+        
+    def save_model(self, model):
+        joblib.dump(model, self.model_path)
+
+    def performance(self, y_test, y_pred):
+        amis = adjusted_mutual_info_score(y_test, y_pred)
+        ars = adjusted_rand_score(y_test, y_pred)
+        chs = calinski_harabasz_score(y_test, y_pred)
+        cm = contingency_matrix(y_test, y_pred)
+        cs = completeness_score(y_test, y_pred)
+        dbs = davies_bouldin_score(y_test, y_pred)
+        fms = fowlkes_mallows_score(y_test, y_pred)
+        hs = homogeneity_score(y_test, y_pred)
+        mis = mutual_info_score(y_test, y_pred)
+        nmis = normalized_mutual_info_score(y_test, y_pred)
+        rs = rand_score(y_test, y_pred)
+        ss = silhouette_score(y_test, y_pred)
+        vms = v_measure_score(y_test, y_pred)
+        
+    def kmeans_clustering(self):
+        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        
+        model = KMeans(n_clusters=3, random_state=42)
+        model.fit(self.X_test)
+        
+        y_pred = model.predict(X_test)
+        self.performance(self, y_test, y_pred)
+
+        self.save_model(self, model)
+
+    def DBSCAN(self):
+        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        
+        model = DBSCAN(eps=0.5, min_samples=5)
+        model.fit(self.X_test)
+        
+        y_pred = model.labels_
+        self.performance(self)
+
+        self.save_model(self, model)
+
+    def Gaussian_Mixture_Model(self):
+        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        
+        model = GaussianMixture(n_components=3, random_state=42)
+        model.fit(self.X_test)
+        
+        y_pred = model.predict(self.X_test)
+        self.performance(self, y_test, y_pred)
+
+        self.save_model(self, model)
+
+    def BIRCH(self):
+        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        
+        model = Birch(n_clusters=3, threshold=0.5, compute_labels=True)
+        model.fit(self.X_test)
+        
+        y_pred = model.labels_
+        self.performance(self, y_test, y_pred)
+
+        self.save_model(self, model)
+
+    def Affinity_Propagation(self):
+        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        
+        model = AffinityPropagation(damping=0.5, max_iter=200, convergence_iter=15, random_state=42)
+        model.fit(self.X_test)
+        
+        y_pred = model.labels_
+        self.performance(self, y_test, y_pred)
+
+        self.save_model(self, model)
+
+    def Mean_Shift(self):
+        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        
+        model = MeanShift(bandwidth=0.5, bin_seeding=True, cluster_all=True)
+        model.fit(self.X_test)
+        
+        y_pred = model.labels_
+        self.performance(self, y_test, y_pred)
+
+        self.save_model(self, model)
+
+    def OPTICS(self):
+        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        
+        model = OPTICS(eps=0.5, min_samples=5, xi=0.05, min_cluster_size=2)
+        model.fit(self.X_test)
+        
+        y_pred = model.labels_
+        self.performance(self, y_test, y_pred)
+
+        self.save_model(self, model)
+    
+    def Agglomerative_Hierarchy(self):
+        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        
+        model = AgglomerativeClustering(n_clusters=3, affinity='euclidean', linkage='ward')
+        model.fit(self.X_test)
+        
+        y_pred = model.labels_
         self.performance(self, y_test, y_pred)
 
         self.save_model(self, model)
