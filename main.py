@@ -18,10 +18,11 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score, balanced_accuracy_score, precision_score, average_precision_score, recall_score, jaccard_score, f1_score, roc_auc_score
 
+from sklearn.cluster import KMeans, DBSCAN, Birch, AffinityPropagation, MeanShift, OPTICS, AgglomerativeClustering
+from sklearn_extra.cluster import KMedoids
+from sklearn.mixture import GaussianMixture
 from sklearn.metrics import adjusted_mutual_info_score, adjusted_rand_score, calinski_harabasz_score, completeness_score, davies_bouldin_score, fowlkes_mallows_score, homogeneity_score, mutual_info_score, normalized_mutual_info_score, rand_score, silhouette_score, v_measure_score
 from sklearn.metrics.cluster import contingency_matrix
-from sklearn.cluster import KMeans, DBSCAN, Birch, AffinityPropagation, MeanShift, OPTICS, AgglomerativeClustering
-from sklearn.mixture import GaussianMixture
 
 class Regression:
     def __init__(self, dataset_path, target_variable, output_path):
@@ -31,16 +32,7 @@ class Regression:
 
     def load_dataset(self):
         try:
-            try:
-                dataset = pd.read_csv(self.dataset_path)
-            except:
-                pass
-
-            try:
-                dataset = pd.read_excel(self.dataset_path)
-            except:
-                pass
-
+            dataset = pd.read_csv(self.dataset_path)
             return dataset
         
         except FileNotFoundError:
@@ -277,16 +269,7 @@ class Clustering:
     
     def load_dataset(self):
         try:
-            try:
-                dataset = pd.read_csv(self.dataset_path)
-            except:
-                pass
-
-            try:
-                dataset = pd.read_excel(self.dataset_path)
-            except:
-                pass
-
+            dataset = pd.read_csv(self.dataset_path)
             return dataset
         
         except FileNotFoundError:
@@ -296,7 +279,7 @@ class Clustering:
         except:
             print("Some error has occured")
             return None
-    
+        
     def preprocessing(self):
         dataset = self.load_dataset()
         if dataset is not None:
@@ -329,22 +312,33 @@ class Clustering:
         ss = silhouette_score(y_test, y_pred)
         vms = v_measure_score(y_test, y_pred)
     
-    def kmeans_clustering(self):
+    def k_means_clustering(self):
         X_train, X_test, y_train, y_test = self.preprocessing(self)
         
-        model = KMeans(n_clusters=3, random_state=42)
-        model.fit(self.X_test)
+        model = KMeans(init="k-means++", algorithm="elkan", random_state=42)
+        model.fit(X_train)
         
         y_pred = model.predict(X_test)
         self.performance(self, y_test, y_pred)
 
         self.save_model(self, model)
 
-    def DBSCAN(self):
+    def k_medoids_clustering(self):
         X_train, X_test, y_train, y_test = self.preprocessing(self)
         
-        model = DBSCAN(eps=0.5, min_samples=5)
-        model.fit(self.X_test)
+        model = KMedoids(init="k-medoids++", random_state=42)
+        model.fit(X_train)
+        
+        y_pred = model.predict(X_test)
+        self.performance(self, y_test, y_pred)
+
+        self.save_model(self, model)
+
+    def dbscan_clustering(self):
+        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        
+        model = DBSCAN(metric="manhattan", algorithm="auto")
+        model.fit(X_train)
         
         y_pred = model.labels_
         self.performance(self)
@@ -355,53 +349,9 @@ class Clustering:
         X_train, X_test, y_train, y_test = self.preprocessing(self)
         
         model = GaussianMixture(n_components=3, random_state=42)
-        model.fit(self.X_test)
+        model.fit(X_train)
         
         y_pred = model.predict(self.X_test)
-        self.performance(self, y_test, y_pred)
-
-        self.save_model(self, model)
-
-    def BIRCH(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
-        
-        model = Birch(n_clusters=3, threshold=0.5, compute_labels=True)
-        model.fit(self.X_test)
-        
-        y_pred = model.labels_
-        self.performance(self, y_test, y_pred)
-
-        self.save_model(self, model)
-
-    def Affinity_Propagation(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
-        
-        model = AffinityPropagation(damping=0.5, max_iter=200, convergence_iter=15, random_state=42)
-        model.fit(self.X_test)
-        
-        y_pred = model.labels_
-        self.performance(self, y_test, y_pred)
-
-        self.save_model(self, model)
-
-    def Mean_Shift(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
-        
-        model = MeanShift(bandwidth=0.5, bin_seeding=True, cluster_all=True)
-        model.fit(self.X_test)
-        
-        y_pred = model.labels_
-        self.performance(self, y_test, y_pred)
-
-        self.save_model(self, model)
-
-    def OPTICS(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
-        
-        model = OPTICS(eps=0.5, min_samples=5, xi=0.05, min_cluster_size=2)
-        model.fit(self.X_test)
-        
-        y_pred = model.labels_
         self.performance(self, y_test, y_pred)
 
         self.save_model(self, model)
@@ -410,7 +360,7 @@ class Clustering:
         X_train, X_test, y_train, y_test = self.preprocessing(self)
         
         model = AgglomerativeClustering(n_clusters=3, affinity='euclidean', linkage='ward')
-        model.fit(self.X_test)
+        model.fit(X_train)
         
         y_pred = model.labels_
         self.performance(self, y_test, y_pred)
