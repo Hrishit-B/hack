@@ -262,9 +262,8 @@ class Classification:
         self.save_model(self, model)
         
 class Clustering:
-    def __init__(self, dataset_path, target_variable, output_path):
+    def __init__(self, dataset_path, output_path):
         self.dataset_path = dataset_path
-        self.target_variable = target_variable
         self.output_path = output_path
     
     def load_dataset(self):
@@ -283,86 +282,84 @@ class Clustering:
     def preprocessing(self):
         dataset = self.load_dataset()
         if dataset is not None:
-            X = dataset.drop(self.target_variable, axis=1)
-            y = dataset[self.target_variable]
+            X = dataset.copy()
 
             scaler = StandardScaler()
             X_scaled = scaler.fit_transform(X)
         
-            X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-            return X_train, X_test, y_train, y_test
+            return X_scaled
         else:
             return
     
     def save_model(self, model):
         joblib.dump(model, self.model_path)
 
-    def performance(self, y_test, y_pred):
-        amis = adjusted_mutual_info_score(y_test, y_pred)
-        ars = adjusted_rand_score(y_test, y_pred)
-        chs = calinski_harabasz_score(y_test, y_pred)
-        cm = contingency_matrix(y_test, y_pred)
-        cs = completeness_score(y_test, y_pred)
-        dbs = davies_bouldin_score(y_test, y_pred)
-        fms = fowlkes_mallows_score(y_test, y_pred)
-        hs = homogeneity_score(y_test, y_pred)
-        mis = mutual_info_score(y_test, y_pred)
-        nmis = normalized_mutual_info_score(y_test, y_pred)
-        rs = rand_score(y_test, y_pred)
-        ss = silhouette_score(y_test, y_pred)
-        vms = v_measure_score(y_test, y_pred)
+    # def performance(self, y_test, y_pred):
+    #     amis = adjusted_mutual_info_score(y_test, y_pred)
+    #     ars = adjusted_rand_score(y_test, y_pred)
+    #     chs = calinski_harabasz_score(y_test, y_pred)
+    #     cm = contingency_matrix(y_test, y_pred)
+    #     cs = completeness_score(y_test, y_pred)
+    #     dbs = davies_bouldin_score(y_test, y_pred)
+    #     fms = fowlkes_mallows_score(y_test, y_pred)
+    #     hs = homogeneity_score(y_test, y_pred)
+    #     mis = mutual_info_score(y_test, y_pred)
+    #     nmis = normalized_mutual_info_score(y_test, y_pred)
+    #     rs = rand_score(y_test, y_pred)
+    #     ss = silhouette_score(y_test, y_pred)
+    #     vms = v_measure_score(y_test, y_pred)
     
     def k_means_clustering(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X = self.preprocessing(self)
         
         model = KMeans(init="k-means++", algorithm="elkan", random_state=42)
-        model.fit(X_train)
+        model.fit(X)
         
-        y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        y_pred = model.predict(X)
+        # self.performance(self, y_pred)
 
         self.save_model(self, model)
 
     def k_medoids_clustering(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X = self.preprocessing(self)
         
         model = KMedoids(init="k-medoids++", random_state=42)
-        model.fit(X_train)
+        model.fit(X)
         
-        y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        y_pred = model.predict(X)
+        # self.performance(self, y_test, y_pred)
 
         self.save_model(self, model)
 
     def dbscan_clustering(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X = self.preprocessing(self)
         
         model = DBSCAN(metric="manhattan", algorithm="auto")
-        model.fit(X_train)
+        model.fit(X)
         
         y_pred = model.labels_
-        self.performance(self)
+        # self.performance(self)
 
         self.save_model(self, model)
 
     def Gaussian_Mixture_Model(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X = self.preprocessing(self)
         
         model = GaussianMixture(n_components=3, random_state=42)
-        model.fit(X_train)
+        model.fit(X)
         
-        y_pred = model.predict(self.X_test)
-        self.performance(self, y_test, y_pred)
+        y_pred = model.predict(X)
+        # self.performance(self, y_pred)
 
         self.save_model(self, model)
 
     def Agglomerative_Hierarchy(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X = self.preprocessing(self)
         
         model = AgglomerativeClustering(n_clusters=3, affinity='euclidean', linkage='ward')
-        model.fit(X_train)
+        model.fit(X)
         
         y_pred = model.labels_
-        self.performance(self, y_test, y_pred)
+        # self.performance(self, y_pred)
 
         self.save_model(self, model)
