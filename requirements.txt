@@ -3,7 +3,7 @@ pandas
 openpyxl
 scikit-learn
 scikit-learn-extra
+mlxtend
 joblib
 fastapi
 uvicorn
-mlxtend
