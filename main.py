@@ -1,9 +1,11 @@
 import joblib
+import numpy as np
 from turtle import pd
 from statistics import LinearRegression
+from sklearn.linear_model import Lasso
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 
 class regression:
     def __init__(self, dataset_path, target_variable, output_path):
@@ -86,3 +88,44 @@ class regression:
             print(f"R-squared: {r2:.2f}")
             print(f"Mean Squared Error: {mse:.2f}")
             print(f"Mean Absolute Error: {mae:.2f}")
+            
+    def regression_model_lasso(self, alpha=1.0):
+        dataset = self.load_dataset()
+        if dataset is not None:
+            X = dataset.drop(self.target_variable, axis=1)
+            y = dataset[self.target_variable]
+        
+            # Split the dataset into training and testing sets
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        
+            # Scale the features
+            scaler = StandardScaler()
+            X_train_scaled = scaler.fit_transform(X_train)
+            X_test_scaled = scaler.transform(X_test)
+        
+            # Create a Lasso regression model
+            model = Lasso(alpha=alpha, random_state=42)
+        
+            # Train the model
+            model.fit(X_train_scaled, y_train)
+        
+            # Save the trained model and scaler to files
+            joblib.dump(model, self.model_path)
+            joblib.dump(scaler, self.scaler_path)
+        
+            # Predict the target values for the testing set
+            y_pred = model.predict(X_test_scaled)
+        
+            # Evaluate the model's performance
+            r2 = r2_score(y_test, y_pred)
+            mse = mean_squared_error(y_test, y_pred)
+            mae = mean_absolute_error(y_test, y_pred)
+        
+            # Print the evaluation metrics
+            print(f"R-squared: {r2:.2f}")
+            print(f"Mean Squared Error: {mse:.2f}")
+            print(f"Mean Absolute Error: {mae:.2f}")
+        
+            # Print the number of features used by the model
+            n_features_used = np.sum(model.coef_ != 0)
+            print(f"Number of features used: {n_features_used}")
