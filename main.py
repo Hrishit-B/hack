@@ -19,7 +19,7 @@ class regression:
             print(f"File {self.dataset_path} not found.")
             return None
     
-    def regression_model_linear(self.dataset_path):
+    def regression_model_linear(self):
         dataset = self.load_dataset()
         if dataset is not None:
             X = dataset.drop(self.target_variable, axis=1)
