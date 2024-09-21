@@ -138,6 +138,8 @@ import os
 import click
 from run import *
 import textwrap
+import pandas as pd
+import matplotlib.pyplot as plt
 
 INVALID_FILETYPE_MSG = "Error: Invalid file format. %s must be a .csv file."
 INVALID_PATH_MSG = "Error: Invalid file path/name. Path %s does not exist."
@@ -166,7 +168,7 @@ def classify(ctx, target):
     input_path = ctx.obj['path']
     output_path = ctx.obj['dest']
 
-    print("dataset loaded!")
+    print("Dataset Loaded!")
 
     files = ["LogReg.joblib", "NB.joblib", "SVC.joblib", "DTC.joblib", "RFC.joblib", "GBC.joblib", "Metrics.csv"]
     zip_file_name = output_path
@@ -177,7 +179,9 @@ def classify(ctx, target):
         if file_path != "Metrics.csv" and os.path.exists(file_path):
             os.remove(file_path)
 
-    print("Classification models ran successfully!")
+    print("\nClassification Models Ran Successfully!")
+
+    analyze_classification()
 
 @cli.command()
 @click.argument('feature_matrix')
@@ -198,28 +202,40 @@ def regress(ctx, target):
     input_path = ctx.obj['path']
     output_path = ctx.obj['dest']
 
-    print("dataset loaded!")
+    print("Dataset Loaded!")
 
-    files = ["linear.joblib", "lasso.joblib", "decision_tree.joblib", "random_forest.joblib", "gradient_boosting.joblib"]
+    files = ["LinReg.joblib", "L1.joblib", "DTR.joblib", "RFR.joblib", "GBR.joblib", "Metrics.csv"]
     zip_file_name = output_path
 
     regression_testing(input_path, target, files, zip_file_name)
     for file in files:
         file_path = file
-        if os.path.exists(file_path):
+        if file_path != "Metrics.csv" and os.path.exists(file_path):
             os.remove(file_path)
 
-    print("Regression models ran successfully!")
+    print("\nRegression Models Ran Successfully!")
+    analyze_regression()
 
 @cli.command()
 def compute():
     """Shows the computational resources needed to train the model"""
     print('saving computation efficiency graphs...')
 
-@cli.command()
-def analyze():
+def analyze_regression():
     """Compares the model performances across metrics"""
-    pass
+    df = pd.read_csv('Metrics.csv')
+    best_model = df.loc[df['Mean Absolute Percentage Error'].idxmin(), 'Model Name']
+
+
+
+    print(f"\nThe best model is: ", best_model)
+
+def analyze_classification():
+    """Compares the model performances across metrics"""
+    df = pd.read_csv('Metrics.csv')
+    best_model = df.loc[df['F1 Score'].idxmax(), 'Model Name']
+
+    print(f"\nThe best model is: ", best_model)
 
 if __name__ == "__main__":
     program_description = textwrap.dedent('''
