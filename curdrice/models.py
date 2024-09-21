@@ -18,8 +18,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, jaccard_score, f1_score
 
-from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif, RFE
-from mlxtend.feature_selection import ExhaustiveFeatureSelector
+from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif
 
 class Regression:
     def __init__(self, dataset_path, target_variable, output_path, performance):
@@ -242,7 +241,7 @@ class Classification:
         return perf
         
 class FeatureSelection:
-    def __init__(self,feature_matrix,target_vector):
+    def __init__(self,feature_matrix, target_vector):
         self.X = feature_matrix
         self.y = target_vector
         
@@ -251,7 +250,7 @@ class FeatureSelection:
         X_high_variance = selector.fit_transform(X)
         return X_high_variance
     
-    def chi_square_selector(self,X, y):
+    def chi_square_selector(self, X, y):
         selector = SelectKBest(chi2)
         X_selected = selector.fit_transform(X, y)
         return X_selected
@@ -271,29 +270,3 @@ class FeatureSelection:
         model.fit(X, y)
         selected_features = np.where(model.coef_ != 0)[0]
         return X[:, selected_features], selected_features
-    
-    '''
-    def rfe_selector(self, X, y, n_features=5):
-        model = RandomForestRegressor(criterion="friedman_mse", random_state=42)
-        rfe = RFE(model, n_features_to_select=n_features)
-        rfe.fit_transform(X, y)
-        return rfe.ranking_
-    
-    def rfe_selector(self, X, y, n_features=5):
-        model = RandomForestClassifier(criterion="entropy", random_state=42)
-        rfe = RFE(model, n_features_to_select=n_features)
-        rfe.fit_transform(X, y)
-        return rfe.ranking_
-    
-    def efs_selector(self, X, y):
-        model = RandomForestRegressor(criterion="friedman_mse", random_state=42)
-        efs = ExhaustiveFeatureSelector(model, min_features=1, max_features=X.shape[1], scoring='neg_mean_squared_error', cv=5)
-        efs = efs.fit(X, y)
-        return efs.best_idx_
-    
-    def efs_selector(self, X, y):
-        model = RandomForestClassifier(criterion="entropy", random_state=42)
-        efs = ExhaustiveFeatureSelector(model, min_features=1, max_features=X.shape[1], scoring='neg_mean_squared_error', cv=5)
-        efs = efs.fit(X, y)
-        return efs.best_idx_
-    '''
