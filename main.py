@@ -2,13 +2,13 @@ import numpy as np
 import pandas as pd
 import joblib
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 
 from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, mean_squared_log_error, r2_score
+from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, mean_squared_log_error
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
@@ -16,22 +16,21 @@ from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.metrics import confusion_matrix, accuracy_score, balanced_accuracy_score, precision_score, average_precision_score, recall_score, jaccard_score, f1_score, roc_auc_score
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, precision_score, average_precision_score, recall_score, jaccard_score, f1_score
 
 from sklearn.cluster import KMeans, DBSCAN,AgglomerativeClustering
 from sklearn_extra.cluster import KMedoids
 from sklearn.mixture import GaussianMixture
-from sklearn.metrics.cluster import contingency_matrix
-from sklearn.metrics import adjusted_mutual_info_score, adjusted_rand_score, calinski_harabasz_score, completeness_score, davies_bouldin_score, fowlkes_mallows_score, homogeneity_score, mutual_info_score, normalized_mutual_info_score, rand_score, silhouette_score, v_measure_score
 
 from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif, RFE
 from mlxtend.feature_selection import ExhaustiveFeatureSelector
 
 class Regression:
-    def __init__(self, dataset_path, target_variable, output_path):
+    def __init__(self, dataset_path, target_variable, output_path, performance):
         self.dataset_path = dataset_path
         self.target_variable = target_variable
         self.output_path = output_path
+        self.performance = performance
 
     def load_dataset(self):
         try:
@@ -63,14 +62,14 @@ class Regression:
     def save_model(self, model):
         joblib.dump(model, self.model_path)
 
-    def performance(self, y_test, y_pred):
-        r2 = r2_score(y_test, y_pred)
+    def performance(self, model_name, y_test, y_pred):
         mae = mean_absolute_error(y_test, y_pred)
         mape = mean_absolute_percentage_error(y_test, y_pred)
         mse = mean_squared_error(y_test, y_pred)
         rmse = np.sqrt(mse)
         msle = mean_squared_log_error(y_test, y_pred)
         rmsle = np.sqrt(msle)
+        self.performance[model_name] = [mae, mape, mse, rmse, msle, rmsle]
 
     def linear_regression(self):
         X_train, X_test, y_train, y_test = self.preprocessing(self)
@@ -79,7 +78,7 @@ class Regression:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "LinearRegression", y_test, y_pred)
 
         self.save_model(self, model)
 
@@ -91,7 +90,7 @@ class Regression:
         model.fit(X_poly, y_train)
 
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "PolynomialFeatures", y_test, y_pred)
 
         self.save_model(self, model)
     
@@ -102,7 +101,7 @@ class Regression:
         model.fit(X_train, y_train)
         
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "Lasso", y_test, y_pred)
 
         self.save_model(self, model)
 
@@ -113,7 +112,7 @@ class Regression:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "DecisionTreeRegressor", y_test, y_pred)
 
         self.save_model(self, model)
 
@@ -124,7 +123,7 @@ class Regression:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "RandomForestRegressor", y_test, y_pred)
 
         self.save_model(self, model)
 
@@ -135,7 +134,7 @@ class Regression:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "GradientBoostingRegressor", y_test, y_pred)
 
         self.save_model(self, model)
 
@@ -175,9 +174,7 @@ class Classification:
     def save_model(self, model):
         joblib.dump(model, self.model_path)
 
-    def performance(self, y_test, y_pred):
-        cm = confusion_matrix(y_test, y_pred)
-        normalized_cm = confusion_matrix(y_test, y_pred, normalized=True)
+    def performance(self, model_name,  y_test, y_pred):
         acs = accuracy_score(y_test, y_pred)
         bacs = balanced_accuracy_score(y_test, y_pred)
         ps = precision_score(y_test, y_pred)
@@ -185,7 +182,7 @@ class Classification:
         rs = recall_score(y_test, y_pred)
         js = jaccard_score(y_test, y_pred)
         f1s = f1_score(y_test, y_pred)
-        rocaucs = roc_auc_score(y_test, y_pred)
+        self.performance[model_name] = [acs, bacs, ps, aps, rs, js, f1s]
 
     def logistic_regression(self):
         X_train, X_test, y_train, y_test = self.preprocessing(self)
@@ -194,7 +191,7 @@ class Classification:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "LogisticRegression", y_test, y_pred)
 
         self.save_model(self, model)
 
@@ -205,7 +202,7 @@ class Classification:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "GaussianNB", y_test, y_pred)
 
         self.save_model(self, model)
 
@@ -216,7 +213,7 @@ class Classification:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "GaussianProcessClassifier", y_test, y_pred)
 
         self.save_model(self, model)
 
@@ -227,7 +224,7 @@ class Classification:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "SVC", y_test, y_pred)
 
         self.save_model(self, model)
 
@@ -238,7 +235,7 @@ class Classification:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "DecisionTreeClassifier", y_test, y_pred)
 
         self.save_model(self, model)
 
@@ -249,7 +246,7 @@ class Classification:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "RandomForestClassifier", y_test, y_pred)
 
         self.save_model(self, model)
     
@@ -260,7 +257,7 @@ class Classification:
         model.fit(X_train, y_train)
             
         y_pred = model.predict(X_test)
-        self.performance(self, y_test, y_pred)
+        self.performance(self, "GradientBoostingClassifier", y_test, y_pred)
 
         self.save_model(self, model)
         
