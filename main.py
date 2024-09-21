@@ -16,6 +16,7 @@ from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.multiclass import OneVsRestClassifier
 from sklearn.metrics import accuracy_score, balanced_accuracy_score, precision_score, average_precision_score, recall_score, jaccard_score, f1_score
 
 from sklearn.cluster import KMeans, DBSCAN,AgglomerativeClustering
@@ -129,10 +130,11 @@ class Regression:
         return perf
 
 class Classification:
-    def __init__(self, dataset_path, target_variable, output_path):
+    def __init__(self, dataset_path, target_variable, output_path, performance):
         self.dataset_path = dataset_path
         self.target_variable = target_variable
         self.output_path = output_path
+        self.performance = performance
     
     def load_dataset(self):
         try:
@@ -162,20 +164,18 @@ class Classification:
             return
     
     def save_model(self, model):
-        joblib.dump(model, self.model_path)
+        joblib.dump(model, self.output_path)
 
     def performance_evaluation(self, model_name,  y_test, y_pred):
         acs = accuracy_score(y_test, y_pred)
         bacs = balanced_accuracy_score(y_test, y_pred)
-        ps = precision_score(y_test, y_pred)
-        aps = average_precision_score(y_test, y_pred)
-        rs = recall_score(y_test, y_pred)
-        js = jaccard_score(y_test, y_pred)
-        f1s = f1_score(y_test, y_pred)
+        ps = precision_score(y_test, y_pred, average="weighted")
+        rs = recall_score(y_test, y_pred, average="weighted")
+        js = jaccard_score(y_test, y_pred, average="weighted")
+        f1s = f1_score(y_test, y_pred, average="weighted")
         self.performance[model_name] = {'accuracy_score': acs, 
                                         'balanced_accuracy_score': bacs, 
                                         'precision_score': ps, 
-                                        'average_precision_score': aps, 
                                         'recall_score': rs, 
                                         'jaccard_score': js, 
                                         'f1_score': f1s}
@@ -184,7 +184,7 @@ class Classification:
     def logistic_regression(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
             
-        model = LogisticRegression(solver="saga", random_state=42)
+        model = LogisticRegression(multi_class="multinomial", solver="saga", random_state=42)
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 

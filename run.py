@@ -57,52 +57,53 @@ def classification_testing():
     def naive_bayes_testing(dataset_path, target_variable, output_path, performance):
         r = Classification(dataset_path, target_variable, output_path, performance)
         x = r.naive_bayes_classification()
-        performance_fr["NaiveBayes"] = x["NaiveBayes"]
+        performance_fr["GaussianNB"] = x["GaussianNB"]
 
     def gaussian_process_testing(dataset_path, target_variable, output_path, performance):
         r = Classification(dataset_path, target_variable, output_path, performance)
         x = r.gaussian_process_classification()
-        performance_fr["GaussianProcess"] = x["GaussianProcess"]
+        performance_fr["GaussianProcessClassifier"] = x["GaussianProcessClassifier"]
     
     def support_vector_testing(dataset_path, target_variable, output_path, performance):
         r = Classification(dataset_path, target_variable, output_path, performance)
         x = r.support_vector_classification()
-        performance_fr["SupportVector"] = x["SupportVector"]
+        performance_fr["SVC"] = x["SVC"]
 
     def decision_tree_classification_testing(dataset_path, target_variable, output_path, performance):
         r = Classification(dataset_path, target_variable, output_path, performance)
         x = r.decision_tree_classification()
-        performance_fr["DecisionTreeClassification"] = x["DecisionTreeClassification"]
+        performance_fr["DecisionTreeClassifier"] = x["DecisionTreeClassifier"]
 
     def random_forest_classification_testing(dataset_path, target_variable, output_path, performance):
         r = Classification(dataset_path, target_variable, output_path, performance)
         x = r.random_forest_classification()
-        performance_fr["RandomForestClassification"] = x["RandomForestClassification"]
+        performance_fr["RandomForestClassifier"] = x["RandomForestClassifier"]
 
-    def gradient_boosting_Classification_testing(dataset_path, target_variable, output_path, performance):
+    def gradient_boosting_classification_testing(dataset_path, target_variable, output_path, performance):
         r = Classification(dataset_path, target_variable, output_path, performance)
-        x = r.gradient_boosting_regressor()
-        performance_fr["GradientBoostingClassification"] = x["GradientBoostingClassification"]
+        x = r.gradient_boosting_classification()
+        performance_fr["GradientBoostingClassifier"] = x["GradientBoostingClassifier"]
 
     def zip_compile(files, zip_name):
             with zipfile.ZipFile(zip_name, 'w') as zipf:
                 for file in files:
                     zipf.write(file)
-        
+
     performance_fr = dict()
 
-    def result_classification(dataset_path, target_variable):
+    logistic_regression_testing("winequality-red.csv", "quality", "logistic.joblib", dict())
+    naive_bayes_testing("winequality-red.csv", "quality", "naive_bayes.joblib", dict())
+    gaussian_process_testing("winequality-red.csv", "quality", "gaussian_process.joblib", dict())
+    support_vector_testing("winequality-red.csv", "quality", "support_vector.joblib", dict())
+    decision_tree_classification_testing("winequality-red.csv", "quality", "decision_tree_c.joblib", dict())
+    random_forest_classification_testing("winequality-red.csv", "quality", "random_forest_c.joblib", dict())
+    gradient_boosting_Classification_testing("winequality-red.csv", "quality", "gradient_boosting_c.joblib", dict())
 
-        logistic_regression_testing(dataset_path, target_variable, "logistic.joblib", dict())
-        naive_bayes_testing(dataset_path, target_variable, "naive_bayes.joblib", dict())
-        gaussian_process_testing(dataset_path, target_variable, "gaussian_process.joblib", dict())
-        support_vector_testing(dataset_path, target_variable, "support_vector.joblib", dict())
-        decision_tree_classification_testing(dataset_path, target_variable, "decision_tree_c.joblib", dict())
-        random_forest_classification_testing(dataset_path, target_variable, "random_forest_c.joblib", dict())
-        gradient_boosting_Classification_testing(dataset_path, target_variable, "gradient_boosting_c.joblib", dict())
-
-        for k in performance_fr.keys():
-            print(k)
-            for v in performance_fr[k].keys():
-                print("{}: {}".format(v, performance_fr[k][v]))
-            print()
+    print(performance_fr)
+        
+    files = ["logistic.joblib", "naive_bayes.joblib", "gaussian_process.joblib", "support_vector.joblib", "decision_tree.joblib", "randomforest.joblib", "gradientboosting.joblib"]
+    zip_file_name = "Regression.zip"
+    zip_compile(files, zip_file_name)
+    
+regression_testing()
+classification_testing()
