@@ -110,6 +110,3 @@ def classification_testing():
         files = ["logistic.joblib", "naive_bayes.joblib", "gaussian_process.joblib", "support_vector.joblib", "decision_tree.joblib", "randomforest.joblib", "gradientboosting.joblib"]
         zip_file_name = "Regression.zip"
         zip_compile(files, zip_file_name)
-    
-regression_testing()
-classification_testing()
