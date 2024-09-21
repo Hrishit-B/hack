@@ -42,9 +42,8 @@ def classification(args):
         file_path = file
         if os.path.exists(file_path):
             os.remove(file_path)
-            print(f"File '{file_path}' deleted successfully.")
         else:
-            print(f"File '{file_path}' not found.")
+            pass
 
     print("Classification models ran successfully!")
 
@@ -86,9 +85,8 @@ def regression(args):
         file_path = file
         if os.path.exists(file_path):
             os.remove(file_path)
-            print(f"File '{file_path}' deleted successfully.")
         else:
-            print(f"File '{file_path}' not found.")
+            pass
 
     print("Regression models ran successfully!")
 
