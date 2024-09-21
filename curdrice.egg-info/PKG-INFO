@@ -9,6 +9,15 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Operating System :: OS Independent
 Classifier: License :: OSI Approved :: MIT License
 Description-Content-Type: text/markdown
+Requires-Dist: click
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: scikit-learn
+Requires-Dist: openpyxl
+Requires-Dist: scikit-learn-extra
+Requires-Dist: mlxtend
+Requires-Dist: joblib
+Requires-Dist: tabulate
 
 
 # ML Workflow Automation Tool

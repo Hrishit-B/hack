@@ -2,7 +2,6 @@ import os
 import click
 from curdrice.test import *
 import textwrap
-import pandas as pd
 
 INVALID_FILETYPE_MSG = "Error: Invalid file format. %s must be a .csv file."
 INVALID_PATH_MSG = "Error: Invalid file path/name. Path %s does not exist."
@@ -42,14 +41,7 @@ def classify(ctx, target):
         if file_path != "Metrics.csv" and os.path.exists(file_path):
             os.remove(file_path)
 
-    print("\nClassification models ran successfully!")
-
-    analyze_classify()
-
-def analyze_classify():
-    df = pd.read_csv("METRICS.csv")
-    best_model = df.loc[df['F1 Score'].idxmin(), 'Model Name']
-    print("\nThe best model for your data is {}".format(best_model))
+    print("Classification models ran successfully!")
 
 @cli.command()
 @click.argument('feature_matrix')
@@ -70,25 +62,18 @@ def regress(ctx, target):
     input_path = ctx.obj['path']
     output_path = ctx.obj['dest']
 
-    print("Dataset loaded!")
+    print("dataset loaded!")
 
-    files = ["LinReg.joblib", "LassoReg.joblib", "DTR.joblib", "RFR.joblib", "GBR.joblib", "METRICS.csv"]
+    files = ["linear.joblib", "lasso.joblib", "decision_tree.joblib", "random_forest.joblib", "gradient_boosting.joblib"]
     zip_file_name = output_path
 
     regression_testing(input_path, target, files, zip_file_name)
     for file in files:
         file_path = file
-        if file_path != "METRICS.csv" and os.path.exists(file_path):
+        if os.path.exists(file_path):
             os.remove(file_path)
 
-    print("\nRegression models ran successfully!")
-
-    analyze_regress()
-
-def analyze_regress():
-    df = pd.read_csv("METRICS.csv")
-    best_model = df.loc[df['Mean Absolute Percentage Error'].idxmin(), 'Model Name']
-    print("\nThe best model for your data is {}".format(best_model))
+    print("Regression models ran successfully!")
 
 @cli.command()
 def compute():

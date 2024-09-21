@@ -64,14 +64,14 @@ def regression_testing(dataset_path, target_variable, files, zip_name):
 
     def result_regression():
         linear_regression_testing(dataset_path, target_variable, "LinReg.joblib", dict())
-        lasso_regression_testing(dataset_path, target_variable, "Lasso.joblib", dict())
+        lasso_regression_testing(dataset_path, target_variable, "L1.joblib", dict())
         decision_tree_regressor_testing(dataset_path, target_variable, "DTR.joblib", dict())
         random_forest_regressor_testing(dataset_path, target_variable, "RFR.joblib", dict())
         gradient_boosting_regressor_testing(dataset_path, target_variable, "GBR.joblib", dict())
         # table = dataframe(metrics)
 
         df = dataframe(metrics)
-        df.to_csv("METRICS.csv", index=False)
+        df.to_csv("Metrics.csv", index=False)
         # print(table)
 
     result_regression()
@@ -80,7 +80,7 @@ def regression_testing(dataset_path, target_variable, files, zip_name):
 def classification_testing(dataset_path, target_variable, files, zip_name):
     def logistic_regression_testing(dataset_path, target_variable, output_path, performance):
         r = Classification(dataset_path, target_variable, output_path, performance)
-        x = r.logistic_regression() 
+        x = r.logistic_regression()
         metrics["LogisticRegression"] = x["LogisticRegression"]
 
     def naive_bayes_testing(dataset_path, target_variable, output_path, performance):
