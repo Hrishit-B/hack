@@ -1,4 +1,4 @@
-from main import *
+from curdrice.models import *
 import zipfile
 
 import warnings
