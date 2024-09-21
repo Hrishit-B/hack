@@ -37,10 +37,6 @@ class Regression:
             dataset = pd.read_csv(self.dataset_path)
             return dataset
         
-        except FileNotFoundError:
-            print("File {} not found".format(self.dataset_path))
-            return None
-        
         except:
             print("Some error has occured")
             return None
@@ -60,83 +56,83 @@ class Regression:
             return
     
     def save_model(self, model):
-        joblib.dump(model, self.model_path)
+        joblib.dump(model, self.output_path)
 
-    def performance(self, model_name, y_test, y_pred):
+    def performance_evaluation(self, model_name, y_test, y_pred):
         mae = mean_absolute_error(y_test, y_pred)
         mape = mean_absolute_percentage_error(y_test, y_pred)
         mse = mean_squared_error(y_test, y_pred)
         rmse = np.sqrt(mse)
         msle = mean_squared_log_error(y_test, y_pred)
         rmsle = np.sqrt(msle)
-        self.performance[model_name] = [mae, mape, mse, rmse, msle, rmsle]
+        self.performance[model_name] = {'mean_absolute_error': mae, 
+                                        'mean_absolute_percentage_error': mape, 
+                                        'mean_squared_error': mse, 
+                                        'root_mean_squared_error': rmse, 
+                                        'mean_squared_log_error': msle, 
+                                        'root_mean_squared_log_error': rmsle}
+        return self.performance
 
     def linear_regression(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
-            
-        model = LinearRegression()
-        model.fit(X_train, y_train)
-            
-        y_pred = model.predict(X_test)
-        self.performance(self, "LinearRegression", y_test, y_pred)
+        X_train, X_test, y_train, y_test = self.preprocessing()
 
-        self.save_model(self, model)
+        model = LinearRegression()
+        model.fit(X_train, y_train)  
+        y_pred = model.predict(X_test)
+
+        self.performance_evaluation("LinearRegression", y_test, y_pred)
+        self.save_model(model)
 
     def polynomial_regression(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
         
         model = PolynomialFeatures(degree=3)
         X_poly = model.fit_transform(X_train)
         model.fit(X_poly, y_train)
-
         y_pred = model.predict(X_test)
-        self.performance(self, "PolynomialFeatures", y_test, y_pred)
 
-        self.save_model(self, model)
+        self.performance_evaluation("PolynomialFeatures", y_test, y_pred)
+        self.save_model(model)
     
     def lasso_regression(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
         
         model = Lasso(selection='random', random_state=42)
         model.fit(X_train, y_train)
-        
         y_pred = model.predict(X_test)
-        self.performance(self, "Lasso", y_test, y_pred)
 
-        self.save_model(self, model)
+        self.performance_evaluation("Lasso", y_test, y_pred)
+        self.save_model(model)
 
     def decision_tree_regressor(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
             
         model = DecisionTreeRegressor(criterion="friedman_mse", random_state=42)
         model.fit(X_train, y_train)
-            
         y_pred = model.predict(X_test)
-        self.performance(self, "DecisionTreeRegressor", y_test, y_pred)
 
-        self.save_model(self, model)
+        self.performance_evaluation("DecisionTreeRegressor", y_test, y_pred)
+        self.save_model(model)
 
     def random_forest_regressor(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
             
         model = RandomForestRegressor(criterion="friedman_mse", random_state=42)
         model.fit(X_train, y_train)
-            
         y_pred = model.predict(X_test)
-        self.performance(self, "RandomForestRegressor", y_test, y_pred)
 
-        self.save_model(self, model)
+        self.performance_evaluation("RandomForestRegressor", y_test, y_pred)
+        self.save_model(model)
 
     def gradient_boosting_regressor(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
             
         model = GradientBoostingRegressor(loss="huber", criterion="friedman_mse", random_state=42)
-        model.fit(X_train, y_train)
-            
+        model.fit(X_train, y_train) 
         y_pred = model.predict(X_test)
-        self.performance(self, "GradientBoostingRegressor", y_test, y_pred)
 
-        self.save_model(self, model)
+        self.performance_evaluation("GradientBoostingRegressor", y_test, y_pred)
+        self.save_model(model)
 
 class Classification:
     def __init__(self, dataset_path, target_variable, output_path):
@@ -174,7 +170,7 @@ class Classification:
     def save_model(self, model):
         joblib.dump(model, self.model_path)
 
-    def performance(self, model_name,  y_test, y_pred):
+    def performance_evaluation(self, model_name,  y_test, y_pred):
         acs = accuracy_score(y_test, y_pred)
         bacs = balanced_accuracy_score(y_test, y_pred)
         ps = precision_score(y_test, y_pred)
@@ -182,84 +178,84 @@ class Classification:
         rs = recall_score(y_test, y_pred)
         js = jaccard_score(y_test, y_pred)
         f1s = f1_score(y_test, y_pred)
-        self.performance[model_name] = [acs, bacs, ps, aps, rs, js, f1s]
+        self.performance[model_name] = {'accuracy_score': acs, 
+                                        'balanced_accuracy_score': bacs, 
+                                        'precision_score': ps, 
+                                        'average_precision_score': aps, 
+                                        'recall_score': rs, 
+                                        'jaccard_score': js, 
+                                        'f1_score': f1s}
+        return self.performance
 
     def logistic_regression(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
             
         model = LogisticRegression(solver="saga", random_state=42)
         model.fit(X_train, y_train)
-            
         y_pred = model.predict(X_test)
-        self.performance(self, "LogisticRegression", y_test, y_pred)
 
-        self.save_model(self, model)
+        self.performance_evaluation("LogisticRegression", y_test, y_pred)
+        self.save_model(model)
 
     def naive_bayes_classification(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
             
         model = GaussianNB()
-        model.fit(X_train, y_train)
-            
+        model.fit(X_train, y_train)    
         y_pred = model.predict(X_test)
-        self.performance(self, "GaussianNB", y_test, y_pred)
-
-        self.save_model(self, model)
+        
+        self.performance_evaluation("GaussianNB", y_test, y_pred)
+        self.save_model(model)
 
     def gaussian_process_classification(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
             
         model = GaussianProcessClassifier(random_state=42)
-        model.fit(X_train, y_train)
-            
+        model.fit(X_train, y_train) 
         y_pred = model.predict(X_test)
-        self.performance(self, "GaussianProcessClassifier", y_test, y_pred)
 
-        self.save_model(self, model)
+        self.performance_evaluation("GaussianProcessClassifier", y_test, y_pred)
+        self.save_model(model)
 
     def support_vector_classification(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
             
         model = SVC(degree=3, kernel="sigmoid",  random_state=42)
         model.fit(X_train, y_train)
-            
         y_pred = model.predict(X_test)
-        self.performance(self, "SVC", y_test, y_pred)
-
-        self.save_model(self, model)
+        
+        self.performance_evaluation("SVC", y_test, y_pred)
+        self.save_model(model)
 
     def decision_tree_classification(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
             
         model = DecisionTreeClassifier(criterion="entropy", random_state=42)
         model.fit(X_train, y_train)
-            
         y_pred = model.predict(X_test)
-        self.performance(self, "DecisionTreeClassifier", y_test, y_pred)
 
-        self.save_model(self, model)
+        self.performance_evaluation("DecisionTreeClassifier", y_test, y_pred)
+        self.save_model(model)
 
     def random_forest_classification(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
             
         model = RandomForestClassifier(criterion="entropy", random_state=42)
         model.fit(X_train, y_train)
-            
         y_pred = model.predict(X_test)
-        self.performance(self, "RandomForestClassifier", y_test, y_pred)
 
-        self.save_model(self, model)
+        self.performance_evaluation("RandomForestClassifier", y_test, y_pred)
+        self.save_model(model)
     
     def gradient_boosting_classification(self):
-        X_train, X_test, y_train, y_test = self.preprocessing(self)
+        X_train, X_test, y_train, y_test = self.preprocessing()
             
         model = GradientBoostingClassifier(criterion="friedman_mse", random_state=42)
         model.fit(X_train, y_train)
-            
         y_pred = model.predict(X_test)
-        self.performance(self, "GradientBoostingClassifier", y_test, y_pred)
 
-        self.save_model(self, model)
+        self.performance_evaluation("GradientBoostingClassifier", y_test, y_pred)
+        self.save_model(model)
         
 class Clustering:
     def __init__(self, dataset_path, output_path):
@@ -295,53 +291,53 @@ class Clustering:
         joblib.dump(model, self.model_path)
     
     def k_means_clustering(self):
-        X = self.preprocessing(self)
+        X = self.preprocessing()
         
         model = KMeans(init="k-means++", algorithm="elkan", random_state=42)
         model.fit(X)
         
-        self.save_model(self, model)
+        self.save_model(model)
 
         return model.labels_
 
     def k_medoids_clustering(self):
-        X = self.preprocessing(self)
+        X = self.preprocessing()
         
         model = KMedoids(init="k-medoids++", random_state=42)
         model.fit(X)
         
-        self.save_model(self, model)
+        self.save_model(model)
 
         return model.labels_
 
     def dbscan_clustering(self):
-        X = self.preprocessing(self)
+        X = self.preprocessing()
         
         model = DBSCAN(metric="manhattan", algorithm="auto")
         model.fit(X)
         
-        self.save_model(self, model)
+        self.save_model(model)
 
         return model.labels_
 
 
     def agglomerative_clustering(self):
-        X = self.preprocessing(self)
+        X = self.preprocessing()
 
         model = AgglomerativeClustering(metric="manhattan", linkage="ward")
         model.fit(X)
 
-        self.save_model(self, model)
+        self.save_model(model)
 
         return model.labels_
 
     def gaussian_mixture_clustering(self):
-        X = self.preprocessing(self)
+        X = self.preprocessing()
 
         model = GaussianMixture(init_params="k-means++", random_state=42)
         model.fit(X)
 
-        self.save_model(self, model)
+        self.save_model(model)
 
         return model.labels_
 
@@ -351,7 +347,7 @@ class FeatureSelection:
         self.X = feature_matrix
         self.y = target_vector
         
-    def variance_threshold_selector(self,X):
+    def variance_threshold_selector(self, X):
         selector = VarianceThreshold()
         X_high_variance = selector.fit_transform(X)
         return X_high_variance
@@ -361,12 +357,12 @@ class FeatureSelection:
         X_selected = selector.fit_transform(X, y)
         return X_selected
     
-    def mutual_information_selector(self,X, y):
+    def mutual_information_selector(self, X, y):
         selector = SelectKBest(mutual_info_classif)
         X_selected = selector.fit_transform(X, y)
         return X_selected
     
-    def anova_selector(self,X, y):
+    def anova_selector(self, X, y):
         selector = SelectKBest(f_classif)
         X_selected = selector.fit_transform(X, y)
         return X_selected
@@ -378,13 +374,13 @@ class FeatureSelection:
         return X[:, selected_features], selected_features
     
     '''
-    def rfe_selector(self,X, y, n_features=5):
+    def rfe_selector(self, X, y, n_features=5):
         model = RandomForestRegressor(criterion="friedman_mse", random_state=42)
         rfe = RFE(model, n_features_to_select=n_features)
         rfe.fit_transform(X, y)
         return rfe.ranking_
     
-    def rfe_selector(self,X, y, n_features=5):
+    def rfe_selector(self, X, y, n_features=5):
         model = RandomForestClassifier(criterion="entropy", random_state=42)
         rfe = RFE(model, n_features_to_select=n_features)
         rfe.fit_transform(X, y)
