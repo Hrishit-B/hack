@@ -1,7 +1,7 @@
 from main import *
 import zipfile
 
-def regression_testing():
+def regression_testing(dataset_path, target_variable, files, zip_name):
     def linear_regression_testing(dataset_path, target_variable, output_path, performance):
         r = Regression(dataset_path, target_variable, output_path, performance)
         x = r.linear_regression()
@@ -27,14 +27,14 @@ def regression_testing():
         x = r.gradient_boosting_regressor()
         performance_fr["GradientBoostingRegressor"] = x["GradientBoostingRegressor"]
 
-    def zip_compile(files, zip_name):
+    def zip_compile():
             with zipfile.ZipFile(zip_name, 'w') as zipf:
                 for file in files:
                     zipf.write(file)
         
     performance_fr = dict()
 
-    def result_regression(dataset_path, target_variable):
+    def result_regression():
         linear_regression_testing(dataset_path, target_variable, "linear.joblib", dict())
         lasso_regression_testing(dataset_path, target_variable, "lasso.joblib", dict())
         decision_tree_regressor_testing(dataset_path, target_variable, "decision_tree.joblib", dict())
@@ -47,7 +47,10 @@ def regression_testing():
                 print("{}: {}".format(v, performance_fr[k][v]))
             print()
 
-def classification_testing():
+    result_regression()
+    zip_compile()
+
+def classification_testing(dataset_path, target_variable, files, zip_name):
     def logistic_regression_testing(dataset_path, target_variable, output_path, performance):
         r = Classification(dataset_path, target_variable, output_path, performance)
         x = r.logistic_regression()
@@ -78,24 +81,27 @@ def classification_testing():
         x = r.gradient_boosting_classification()
         performance_fr["GradientBoostingClassifier"] = x["GradientBoostingClassifier"]
 
-    def zip_compile(files, zip_name):
+    def zip_compile():
             with zipfile.ZipFile(zip_name, 'w') as zipf:
                 for file in files:
                     zipf.write(file)
 
     performance_fr = dict()
 
-    def result_classification(input_path, target):
+    def result_classification():
 
-        logistic_regression_testing(input_path, target, "logistic.joblib", dict())
-        naive_bayes_testing(input_path, target, "naive_bayes.joblib", dict())
-        support_vector_testing(input_path, target, "support_vector.joblib", dict())
-        decision_tree_classification_testing(input_path, target, "decision_tree_c.joblib", dict())
-        random_forest_classification_testing(input_path, target, "random_forest_c.joblib", dict())
-        gradient_boosting_classification_testing(input_path, target, "gradient_boosting_c.joblib", dict())
+        logistic_regression_testing(dataset_path, target_variable, "logistic.joblib", dict())
+        naive_bayes_testing(dataset_path, target_variable, "naive_bayes.joblib", dict())
+        support_vector_testing(dataset_path, target_variable, "support_vector.joblib", dict())
+        decision_tree_classification_testing(dataset_path, target_variable, "decision_tree_c.joblib", dict())
+        random_forest_classification_testing(dataset_path, target_variable, "random_forest_c.joblib", dict())
+        gradient_boosting_classification_testing(dataset_path, target_variable, "gradient_boosting_c.joblib", dict())
 
         for k in performance_fr.keys():
             print(k)
             for v in performance_fr[k].keys():
                 print("{}: {}".format(v, performance_fr[k][v]))
             print()
+
+    result_classification()
+    zip_compile()

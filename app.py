@@ -34,11 +34,10 @@ def classification(args):
 
     print("dataset loaded!")
 
-    classification_testing.result_classification(input_path, target)
-
-    files = ["logistic.joblib", "naive_bayes.joblib", "gaussian_process.joblib", "support_vector.joblib", "decision_tree.joblib", "randomforest.joblib", "gradientboosting.joblib"]
+    files = ["logistic.joblib", "naive_bayes.joblib", "support_vector.joblib", "decision_tree_c.joblib", "random_forest_c.joblib", "gradient_boosting_c.joblib"]
     zip_file_name = output_path
-    classification_testing.zip_compile(files, zip_file_name)
+
+    classification_testing(input_path, target, files, zip_file_name)
 
     print("Classification models ran successfully!")
 
@@ -72,11 +71,10 @@ def regression(args):
 
     print("dataset loaded!")
 
-    regression_testing.result_regression(input_path, target)
-
     files = ["linear.joblib", "lasso.joblib", "decision_tree.joblib", "random_forest.joblib", "gradient_boosting.joblib"]
     zip_file_name = output_path
-    regression_testing.zip_compile(files, zip_file_name)
+
+    regression_testing(input_path, target, files, zip_file_name)
 
     print("Regression models ran successfully!")
 
