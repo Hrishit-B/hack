@@ -91,19 +91,25 @@ def classification_testing():
 
     performance_fr = dict()
 
-    logistic_regression_testing("winequality-red.csv", "quality", "logistic.joblib", dict())
-    naive_bayes_testing("winequality-red.csv", "quality", "naive_bayes.joblib", dict())
-    gaussian_process_testing("winequality-red.csv", "quality", "gaussian_process.joblib", dict())
-    support_vector_testing("winequality-red.csv", "quality", "support_vector.joblib", dict())
-    decision_tree_classification_testing("winequality-red.csv", "quality", "decision_tree_c.joblib", dict())
-    random_forest_classification_testing("winequality-red.csv", "quality", "random_forest_c.joblib", dict())
-    gradient_boosting_Classification_testing("winequality-red.csv", "quality", "gradient_boosting_c.joblib", dict())
+    def result_classification(dataset_path, target_variable):
 
-    print(performance_fr)
-        
-    files = ["logistic.joblib", "naive_bayes.joblib", "gaussian_process.joblib", "support_vector.joblib", "decision_tree.joblib", "randomforest.joblib", "gradientboosting.joblib"]
-    zip_file_name = "Regression.zip"
-    zip_compile(files, zip_file_name)
+        logistic_regression_testing(dataset_path, target_variable, "logistic.joblib", dict())
+        naive_bayes_testing(dataset_path, target_variable, "naive_bayes.joblib", dict())
+        gaussian_process_testing(dataset_path, target_variable, "gaussian_process.joblib", dict())
+        support_vector_testing(dataset_path, target_variable, "support_vector.joblib", dict())
+        decision_tree_classification_testing(dataset_path, target_variable, "decision_tree_c.joblib", dict())
+        random_forest_classification_testing(dataset_path, target_variable, "random_forest_c.joblib", dict())
+        gradient_boosting_classification_testing(dataset_path, target_variable, "gradient_boosting_c.joblib", dict())
+
+        for k in performance_fr.keys():
+            print(k)
+            for v in performance_fr[k].keys():
+                print("{}: {}".format(v, performance_fr[k][v]))
+            print()
+            
+        files = ["logistic.joblib", "naive_bayes.joblib", "gaussian_process.joblib", "support_vector.joblib", "decision_tree.joblib", "randomforest.joblib", "gradientboosting.joblib"]
+        zip_file_name = "Regression.zip"
+        zip_compile(files, zip_file_name)
     
 regression_testing()
 classification_testing()
