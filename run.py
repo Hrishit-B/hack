@@ -60,11 +60,6 @@ def classification_testing():
         r = Classification(dataset_path, target_variable, output_path, performance)
         x = r.naive_bayes_classification()
         performance_fr["GaussianNB"] = x["GaussianNB"]
-
-    def gaussian_process_testing(dataset_path, target_variable, output_path, performance):
-        r = Classification(dataset_path, target_variable, output_path, performance)
-        x = r.gaussian_process_classification()
-        performance_fr["GaussianProcessClassifier"] = x["GaussianProcessClassifier"]
     
     def support_vector_testing(dataset_path, target_variable, output_path, performance):
         r = Classification(dataset_path, target_variable, output_path, performance)
@@ -95,7 +90,6 @@ def classification_testing():
 
     logistic_regression_testing("winequality-red.csv", "quality", "logistic.joblib", dict())
     naive_bayes_testing("winequality-red.csv", "quality", "naive_bayes.joblib", dict())
-    gaussian_process_testing("winequality-red.csv", "quality", "gaussian_process.joblib", dict())
     support_vector_testing("winequality-red.csv", "quality", "support_vector.joblib", dict())
     decision_tree_classification_testing("winequality-red.csv", "quality", "decision_tree_c.joblib", dict())
     random_forest_classification_testing("winequality-red.csv", "quality", "random_forest_c.joblib", dict())
@@ -107,7 +101,7 @@ def classification_testing():
             print("{}: {}".format(v, performance_fr[k][v]))
         print()
         
-    files = ["logistic.joblib", "naive_bayes.joblib", "gaussian_process.joblib", "support_vector.joblib", "decision_tree_c.joblib", "random_forest_c.joblib", "gradient_boosting_c.joblib"]
+    files = ["logistic.joblib", "naive_bayes.joblib", "support_vector.joblib", "decision_tree_c.joblib", "random_forest_c.joblib", "gradient_boosting_c.joblib"]
     zip_file_name = "Classification.zip"
     zip_compile(files, zip_file_name)
     

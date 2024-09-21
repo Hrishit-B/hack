@@ -184,7 +184,7 @@ class Classification:
     def logistic_regression(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
             
-        model = LogisticRegression(multi_class="multinomial", solver="saga", random_state=42)
+        model = LogisticRegression(multi_class="multinomial", solver="saga", class_weight="balanced", random_state=42)
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
@@ -192,7 +192,6 @@ class Classification:
         self.save_model(model)
         return perf
         
-
     def naive_bayes_classification(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
             
@@ -204,21 +203,10 @@ class Classification:
         self.save_model(model)
         return perf
 
-    def gaussian_process_classification(self):
-        X_train, X_test, y_train, y_test = self.preprocessing()
-            
-        model = GaussianProcessClassifier(random_state=42)
-        model.fit(X_train, y_train) 
-        y_pred = model.predict(X_test)
-
-        perf = self.performance_evaluation("GaussianProcessClassifier", y_test, y_pred)
-        self.save_model(model)
-        return perf
-
     def support_vector_classification(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
             
-        model = SVC(degree=3, kernel="sigmoid",  random_state=42)
+        model = SVC(degree=3, kernel="sigmoid", class_weight="balanced", decision_function_shape="ovr", random_state=42)
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
         
@@ -229,7 +217,7 @@ class Classification:
     def decision_tree_classification(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
             
-        model = DecisionTreeClassifier(criterion="entropy", random_state=42)
+        model = DecisionTreeClassifier(criterion="entropy", class_weight="balanced", random_state=42)
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
@@ -240,7 +228,7 @@ class Classification:
     def random_forest_classification(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
             
-        model = RandomForestClassifier(criterion="entropy", random_state=42)
+        model = RandomForestClassifier(criterion="entropy", class_weight="balanced", random_state=42)
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
