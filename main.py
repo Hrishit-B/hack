@@ -188,8 +188,10 @@ class Classification:
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
-        self.performance_evaluation("LogisticRegression", y_test, y_pred)
+        perf = self.performance_evaluation("LogisticRegression", y_test, y_pred)
         self.save_model(model)
+        return perf
+        
 
     def naive_bayes_classification(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -198,8 +200,9 @@ class Classification:
         model.fit(X_train, y_train)    
         y_pred = model.predict(X_test)
         
-        self.performance_evaluation("GaussianNB", y_test, y_pred)
+        perf = self.performance_evaluation("GaussianNB", y_test, y_pred)
         self.save_model(model)
+        return perf
 
     def gaussian_process_classification(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -208,8 +211,9 @@ class Classification:
         model.fit(X_train, y_train) 
         y_pred = model.predict(X_test)
 
-        self.performance_evaluation("GaussianProcessClassifier", y_test, y_pred)
+        perf = self.performance_evaluation("GaussianProcessClassifier", y_test, y_pred)
         self.save_model(model)
+        return perf
 
     def support_vector_classification(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -218,8 +222,9 @@ class Classification:
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
         
-        self.performance_evaluation("SVC", y_test, y_pred)
+        perf = self.performance_evaluation("SVC", y_test, y_pred)
         self.save_model(model)
+        return perf
 
     def decision_tree_classification(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -228,8 +233,9 @@ class Classification:
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
-        self.performance_evaluation("DecisionTreeClassifier", y_test, y_pred)
+        perf = self.performance_evaluation("DecisionTreeClassifier", y_test, y_pred)
         self.save_model(model)
+        return perf
 
     def random_forest_classification(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -238,8 +244,9 @@ class Classification:
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
-        self.performance_evaluation("RandomForestClassifier", y_test, y_pred)
+        perf = self.performance_evaluation("RandomForestClassifier", y_test, y_pred)
         self.save_model(model)
+        return perf
     
     def gradient_boosting_classification(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -248,8 +255,9 @@ class Classification:
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
-        self.performance_evaluation("GradientBoostingClassifier", y_test, y_pred)
+        perf = self.performance_evaluation("GradientBoostingClassifier", y_test, y_pred)
         self.save_model(model)
+        return perf
         
 class Clustering:
     def __init__(self, dataset_path, output_path):
