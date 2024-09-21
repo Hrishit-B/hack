@@ -85,19 +85,17 @@ def classification_testing():
 
     performance_fr = dict()
 
-    logistic_regression_testing("winequality-red.csv", "quality", "logistic.joblib", dict())
-    naive_bayes_testing("winequality-red.csv", "quality", "naive_bayes.joblib", dict())
-    support_vector_testing("winequality-red.csv", "quality", "support_vector.joblib", dict())
-    decision_tree_classification_testing("winequality-red.csv", "quality", "decision_tree_c.joblib", dict())
-    random_forest_classification_testing("winequality-red.csv", "quality", "random_forest_c.joblib", dict())
-    gradient_boosting_classification_testing("winequality-red.csv", "quality", "gradient_boosting_c.joblib", dict())
+    def result_classification(input_path, target):
 
-    for k in performance_fr.keys():
-        print(k)
-        for v in performance_fr[k].keys():
-            print("{}: {}".format(v, performance_fr[k][v]))
-        print()
-            
-        files = ["logistic.joblib", "naive_bayes.joblib", "support_vector.joblib", "decision_tree.joblib", "randomforest.joblib", "gradientboosting.joblib"]
-        zip_file_name = "Regression.zip"
-        zip_compile(files, zip_file_name)
+        logistic_regression_testing(input_path, target, "logistic.joblib", dict())
+        naive_bayes_testing(input_path, target, "naive_bayes.joblib", dict())
+        support_vector_testing(input_path, target, "support_vector.joblib", dict())
+        decision_tree_classification_testing(input_path, target, "decision_tree_c.joblib", dict())
+        random_forest_classification_testing(input_path, target, "random_forest_c.joblib", dict())
+        gradient_boosting_classification_testing(input_path, target, "gradient_boosting_c.joblib", dict())
+
+        for k in performance_fr.keys():
+            print(k)
+            for v in performance_fr[k].keys():
+                print("{}: {}".format(v, performance_fr[k][v]))
+            print()
