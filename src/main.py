@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import joblib
+from tabulate import tabulate
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
@@ -60,13 +61,14 @@ class Regression:
         rmse = np.sqrt(mse)
         msle = mean_squared_log_error(y_test, y_pred)
         rmsle = np.sqrt(msle)
-        self.performance[model_name] = {'mean_absolute_error': mae, 
-                                        'mean_absolute_percentage_error': mape, 
-                                        'mean_squared_error': mse, 
-                                        'root_mean_squared_error': rmse, 
-                                        'mean_squared_log_error': msle, 
-                                        'root_mean_squared_log_error': rmsle}
+        self.performance[model_name] = {'MAE': mae, 
+                                        'MAPE': mape, 
+                                        'MSE': mse, 
+                                        'RMSE': rmse, 
+                                        'MSLE': msle, 
+                                        'RMSLE': rmsle}
         return self.performance
+    
 
     def linear_regression(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -166,11 +168,11 @@ class Classification:
         rs = recall_score(y_test, y_pred, average="weighted")
         js = jaccard_score(y_test, y_pred, average="weighted")
         f1s = f1_score(y_test, y_pred, average="weighted")
-        self.performance[model_name] = {'accuracy_score': acs, 
-                                        'precision_score': ps, 
-                                        'recall_score': rs, 
-                                        'jaccard_score': js, 
-                                        'f1_score': f1s}
+        self.performance[model_name] = {'A': acs, 
+                                        'P': ps, 
+                                        'R': rs, 
+                                        'J': js, 
+                                        'F1': f1s}
         return self.performance
 
     def logistic_regression(self):

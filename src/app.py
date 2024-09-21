@@ -81,11 +81,10 @@ def regression(args):
     print("Regression models ran successfully!")
 
 def show_compute(args):
-    mode = args.machine[0]
-    if mode.lower() == 'print':
-        print("showing computation graph")
-    elif mode.lower() == 'save':
-        print('saving computation efficiency graphs...')
+    print('saving computation efficiency graphs...')
+
+def show_analysis(args):
+    pass
 
 def main():
 
@@ -114,7 +113,9 @@ def main():
 
     parser.add_argument("-d", "--dest", type=str, nargs=1, metavar="destination_path", default=None, help="stores the zipped joblib files in the specified location")
 
-    parser.add_argument("-m", "--machine", type=str, nargs=1, metavar="computing_resources", default=None, help="shows the computational resources needed to train the model")
+    parser.add_argument("-m", "--machine", metavar="computing_resources", default=None, help="shows the computational resources needed to train the model", action="store_const")
+
+    parser.add_argument("-a", "--analyze", metavar="computing_resources", default=None, help="compares the model performances across metrics", action="store_const")
 
     args = parser.parse_args()
 
@@ -126,8 +127,9 @@ def main():
         elif args.regress != None:
             regression(args)
     
-    if args.graph != None or args.machine != None:
+    if args.machine != None or args.analyze != None:
         show_compute(args)
+        show_analysis(args)
     
 if __name__ == "__main__":
     main()

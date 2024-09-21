@@ -5,3 +5,4 @@ scikit-learn
 scikit-learn-extra
 mlxtend
 joblib
+tabulate
