@@ -297,7 +297,6 @@ class Clustering:
         model.fit(X)
         
         self.save_model(model)
-
         return model.labels_
 
     def k_medoids_clustering(self):
@@ -307,7 +306,6 @@ class Clustering:
         model.fit(X)
         
         self.save_model(model)
-
         return model.labels_
 
     def dbscan_clustering(self):
@@ -317,7 +315,6 @@ class Clustering:
         model.fit(X)
         
         self.save_model(model)
-
         return model.labels_
 
 
@@ -328,7 +325,6 @@ class Clustering:
         model.fit(X)
 
         self.save_model(model)
-
         return model.labels_
 
     def gaussian_mixture_clustering(self):
@@ -338,7 +334,6 @@ class Clustering:
         model.fit(X)
 
         self.save_model(model)
-
         return model.labels_
 
 
