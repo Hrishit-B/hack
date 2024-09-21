@@ -179,6 +179,15 @@ def classify(ctx, target):
 
     print("Classification models ran successfully!")
 
+    analyze_classify()
+
+def analyze_classify():
+    """Compares the model performances across metrics"""
+    df = pd.read_csv('Metrics.csv')
+    best_model = df.loc[df['F1 Score'].idxmax(), 'Model Name']
+
+    print(f"\nThe best model is: ", best_model)
+
 @cli.command()
 @click.argument('feature_matrix')
 @click.argument('target_vector')
@@ -200,26 +209,31 @@ def regress(ctx, target):
 
     print("dataset loaded!")
 
-    files = ["linear.joblib", "lasso.joblib", "decision_tree.joblib", "random_forest.joblib", "gradient_boosting.joblib"]
+    files = ["LinReg.joblib", "Lasso.joblib", "DTR.joblib", "RFR.joblib", "GBR.joblib", "Metrics.csv"]
     zip_file_name = output_path
 
     regression_testing(input_path, target, files, zip_file_name)
     for file in files:
         file_path = file
-        if os.path.exists(file_path):
+        if file_path != "Metrics.csv" and os.path.exists(file_path):
             os.remove(file_path)
 
     print("Regression models ran successfully!")
+    
+    analyze_regress()
+
+def analyze_regress():
+    """Compares the model performances across metrics"""
+    df = pd.read_csv('Metrics.csv')
+    best_model = df.loc[df['Mean Absolute Percentage Error'].idxmin(), 'Model Name']
+
+    print(f"\nThe best model is: ", best_model)
 
 @cli.command()
 def compute():
     """Shows the computational resources needed to train the model"""
     print('saving computation efficiency graphs...')
 
-@cli.command()
-def analyze():
-    """Compares the model performances across metrics"""
-    pass
 
 if __name__ == "__main__":
     program_description = textwrap.dedent('''
