@@ -136,14 +136,14 @@ def classification_testing(dataset_path, target_variable, files, zip_name):
         return df
 
     def result_classification():
-        logistic_regression_testing(dataset_path, target_variable, "logistic.joblib", dict())
-        naive_bayes_testing(dataset_path, target_variable, "naive_bayes.joblib", dict())
-        support_vector_testing(dataset_path, target_variable, "support_vector.joblib", dict())
-        decision_tree_classification_testing(dataset_path, target_variable, "decision_tree_c.joblib", dict())
-        random_forest_classification_testing(dataset_path, target_variable, "random_forest_c.joblib", dict())
-        gradient_boosting_classification_testing(dataset_path, target_variable, "gradient_boosting_c.joblib", dict())
+        logistic_regression_testing(dataset_path, target_variable, "LogReg.joblib", dict())
+        naive_bayes_testing(dataset_path, target_variable, "NB.joblib", dict())
+        support_vector_testing(dataset_path, target_variable, "SVC.joblib", dict())
+        decision_tree_classification_testing(dataset_path, target_variable, "DTC.joblib", dict())
+        random_forest_classification_testing(dataset_path, target_variable, "RFC.joblib", dict())
+        gradient_boosting_classification_testing(dataset_path, target_variable, "GBC.joblib", dict())
         df = dataframe(metrics)
-        df.to_csv("classification.csv", index=False)
+        df.to_csv("Metrics.csv", index=False)
         #print(table)
 
     result_classification()

@@ -34,13 +34,13 @@ def classification(args):
 
     print("dataset loaded!")
 
-    files = ["logistic.joblib", "naive_bayes.joblib", "support_vector.joblib", "decision_tree_c.joblib", "random_forest_c.joblib", "gradient_boosting_c.joblib"]
+    files = ["LogReg.joblib", "NB.joblib", "SVC.joblib", "DTC.joblib", "RFC.joblib", "GBC.joblib", "Metrics.csv"]
     zip_file_name = output_path
 
     classification_testing(input_path, target, files, zip_file_name)
     for file in files:
         file_path = file
-        if os.path.exists(file_path):
+        if file_path != "Metrics.csv" and os.path.exists(file_path):
             os.remove(file_path)
         else:
             pass
