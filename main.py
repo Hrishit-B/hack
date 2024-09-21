@@ -12,12 +12,10 @@ from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error,
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
-from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.metrics import accuracy_score, balanced_accuracy_score, precision_score, average_precision_score, recall_score, jaccard_score, f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, jaccard_score, f1_score
 
 from sklearn.cluster import KMeans, DBSCAN,AgglomerativeClustering
 from sklearn_extra.cluster import KMedoids
@@ -168,13 +166,11 @@ class Classification:
 
     def performance_evaluation(self, model_name,  y_test, y_pred):
         acs = accuracy_score(y_test, y_pred)
-        bacs = balanced_accuracy_score(y_test, y_pred)
         ps = precision_score(y_test, y_pred, average="weighted")
         rs = recall_score(y_test, y_pred, average="weighted")
         js = jaccard_score(y_test, y_pred, average="weighted")
         f1s = f1_score(y_test, y_pred, average="weighted")
         self.performance[model_name] = {'accuracy_score': acs, 
-                                        'balanced_accuracy_score': bacs, 
                                         'precision_score': ps, 
                                         'recall_score': rs, 
                                         'jaccard_score': js, 
