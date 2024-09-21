@@ -94,15 +94,12 @@ def classification_testing():
     random_forest_classification_testing("winequality-red.csv", "quality", "random_forest_c.joblib", dict())
     gradient_boosting_classification_testing("winequality-red.csv", "quality", "gradient_boosting_c.joblib", dict())
 
-    for k in performance_fr.keys():
-        print(k)
-        for v in performance_fr[k].keys():
-            print("{}: {}".format(v, performance_fr[k][v]))
-        print()
-        
-    files = ["logistic.joblib", "naive_bayes.joblib", "gaussian_process.joblib", "support_vector.joblib", "decision_tree_c.joblib", "random_forest_c.joblib", "gradient_boosting_c.joblib"]
-    zip_file_name = "Classification.zip"
-    zip_compile(files, zip_file_name)
-    
-regression_testing()
-classification_testing()
+        for k in performance_fr.keys():
+            print(k)
+            for v in performance_fr[k].keys():
+                print("{}: {}".format(v, performance_fr[k][v]))
+            print()
+            
+        files = ["logistic.joblib", "naive_bayes.joblib", "gaussian_process.joblib", "support_vector.joblib", "decision_tree.joblib", "randomforest.joblib", "gradientboosting.joblib"]
+        zip_file_name = "Regression.zip"
+        zip_compile(files, zip_file_name)
