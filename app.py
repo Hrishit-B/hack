@@ -38,6 +38,13 @@ def classification(args):
     zip_file_name = output_path
 
     classification_testing(input_path, target, files, zip_file_name)
+    for file in files:
+        file_path = file
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"File '{file_path}' deleted successfully.")
+        else:
+            print(f"File '{file_path}' not found.")
 
     print("Classification models ran successfully!")
 
@@ -75,6 +82,13 @@ def regression(args):
     zip_file_name = output_path
 
     regression_testing(input_path, target, files, zip_file_name)
+    for file in files:
+        file_path = file
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"File '{file_path}' deleted successfully.")
+        else:
+            print(f"File '{file_path}' not found.")
 
     print("Regression models ran successfully!")
 
