@@ -34,17 +34,19 @@ def regression_testing():
         
     performance_fr = dict()
 
-    linear_regression_testing("winequality-red.csv", "quality", "linear.joblib", dict())
-    lasso_regression_testing("winequality-red.csv", "quality", "lasso.joblib", dict())
-    decision_tree_regressor_testing("winequality-red.csv", "quality", "decision_tree_r.joblib", dict())
-    random_forest_regressor_testing("winequality-red.csv", "quality", "random_forest_r.joblib", dict())
-    gradient_boosting_regressor_testing("winequality-red.csv", "quality", "gradient_boosting_r.joblib", dict())
+    def result_regression(dataset_path, target_variable):
 
-    print(performance_fr)
-        
-    files = ["linear.joblib", "lasso.joblib", "decision_tree_r.joblib", "random_forest_r.joblib", "gradient_boosting_r.joblib"]
-    zip_file_name = "Regression.zip"
-    zip_compile(files, zip_file_name)
+        linear_regression_testing(dataset_path, target_variable, "linear.joblib", dict())
+        lasso_regression_testing(dataset_path, target_variable, "lasso.joblib", dict())
+        decision_tree_regressor_testing(dataset_path, target_variable, "decision_tree.joblib", dict())
+        random_forest_regressor_testing(dataset_path, target_variable, "random_forest.joblib", dict())
+        gradient_boosting_regressor_testing(dataset_path, target_variable, "gradient_boosting.joblib", dict())
+
+        for k in performance_fr.keys():
+            print(k)
+            for v in performance_fr[k].keys():
+                print("{}: {}".format(v, performance_fr[k][v]))
+            print()
 
 def classification_testing():
     def logistic_regression_testing(dataset_path, target_variable, output_path, performance):
@@ -89,19 +91,18 @@ def classification_testing():
         
     performance_fr = dict()
 
-    logistic_regression_testing("winequality-red.csv", "quality", "logistic.joblib", dict())
-    naive_bayes_testing("winequality-red.csv", "quality", "naive_bayes.joblib", dict())
-    gaussian_process_testing("winequality-red.csv", "quality", "gaussian_process.joblib", dict())
-    support_vector_testing("winequality-red.csv", "quality", "support_vector.joblib", dict())
-    decision_tree_classification_testing("winequality-red.csv", "quality", "decision_tree_c.joblib", dict())
-    random_forest_classification_testing("winequality-red.csv", "quality", "random_forest_c.joblib", dict())
-    gradient_boosting_Classification_testing("winequality-red.csv", "quality", "gradient_boosting_c.joblib", dict())
+    def result_classification(dataset_path, target_variable):
 
-    print(performance_fr)
-        
-    files = ["logistic.joblib", "naive_bayes.joblib", "gaussian_process.joblib", "support_vector.joblib", "decision_tree.joblib", "randomforest.joblib", "gradientboosting.joblib"]
-    zip_file_name = "Regression.zip"
-    zip_compile(files, zip_file_name)
-    
-regression_testing()
-classification_testing()
+        logistic_regression_testing(dataset_path, target_variable, "logistic.joblib", dict())
+        naive_bayes_testing(dataset_path, target_variable, "naive_bayes.joblib", dict())
+        gaussian_process_testing(dataset_path, target_variable, "gaussian_process.joblib", dict())
+        support_vector_testing(dataset_path, target_variable, "support_vector.joblib", dict())
+        decision_tree_classification_testing(dataset_path, target_variable, "decision_tree_c.joblib", dict())
+        random_forest_classification_testing(dataset_path, target_variable, "random_forest_c.joblib", dict())
+        gradient_boosting_Classification_testing(dataset_path, target_variable, "gradient_boosting_c.joblib", dict())
+
+        for k in performance_fr.keys():
+            print(k)
+            for v in performance_fr[k].keys():
+                print("{}: {}".format(v, performance_fr[k][v]))
+            print()
