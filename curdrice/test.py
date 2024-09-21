@@ -63,16 +63,13 @@ def regression_testing(dataset_path, target_variable, files, zip_name):
         return df
 
     def result_regression():
-        linear_regression_testing(dataset_path, target_variable, "LinReg.joblib", dict())
-        lasso_regression_testing(dataset_path, target_variable, "L1.joblib", dict())
-        decision_tree_regressor_testing(dataset_path, target_variable, "DTR.joblib", dict())
-        random_forest_regressor_testing(dataset_path, target_variable, "RFR.joblib", dict())
-        gradient_boosting_regressor_testing(dataset_path, target_variable, "GBR.joblib", dict())
-        # table = dataframe(metrics)
-
-        df = dataframe(metrics)
-        df.to_csv("Metrics.csv", index=False)
-        # print(table)
+        linear_regression_testing(dataset_path, target_variable, "linear.joblib", dict())
+        lasso_regression_testing(dataset_path, target_variable, "lasso.joblib", dict())
+        decision_tree_regressor_testing(dataset_path, target_variable, "decision_tree.joblib", dict())
+        random_forest_regressor_testing(dataset_path, target_variable, "random_forest.joblib", dict())
+        gradient_boosting_regressor_testing(dataset_path, target_variable, "gradient_boosting.joblib", dict())
+        table = dataframe(metrics)
+        print(table)
 
     result_regression()
     zip_compile()
@@ -145,7 +142,6 @@ def classification_testing(dataset_path, target_variable, files, zip_name):
         decision_tree_classification_testing(dataset_path, target_variable, "DTC.joblib", dict())
         random_forest_classification_testing(dataset_path, target_variable, "RFC.joblib", dict())
         gradient_boosting_classification_testing(dataset_path, target_variable, "GBC.joblib", dict())
-
         df = dataframe(metrics)
         df.to_csv("Metrics.csv", index=False)
         #print(table)
