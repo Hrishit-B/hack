@@ -47,16 +47,6 @@ def classification(args):
 
     print("Classification models ran successfully!")
 
-def clustering(args):
-    # input_path = args.path[0]
-    # target = args.clustering[0]
-    # output_path = args.dest[0]
-
-    # validate_file(input_path)
-
-    # clus = automationizer.Clustering(input_path, target, output_path)
-    print("Clustering models ran successfully!")
-
 def feature_selection(args):
     # input_path = args.path[0]
     # feature_matrix = args.selection[0]
@@ -90,13 +80,6 @@ def regression(args):
 
     print("Regression models ran successfully!")
 
-def show_graphs(args):
-    mode = args.graph[0]
-    if mode.lower() == 'print':
-        print("showing graph")
-    elif mode.lower() == 'save':
-        print("saving performance graph...")
-
 def show_compute(args):
     mode = args.machine[0]
     if mode.lower() == 'print':
@@ -125,15 +108,11 @@ def main():
 
     parser.add_argument("-c", "--classify", type=str, nargs=1, metavar="classification_target", default=None, help="performs classification task on the dataset")
 
-    parser.add_argument("-k", "--clustering", type=str, nargs=1, metavar="clustering_target", default=None, help="performs clustering task on the dataset")
-
     parser.add_argument("-r", "--regress", type=str, nargs=1, metavar="regression_target", default=None, help="performs regression task on the dataset")
 
     parser.add_argument("-s", "--selection", type=str, nargs=2, metavar="feature_selection", default=None, help="performs feature selection task on the dataset")
 
     parser.add_argument("-d", "--dest", type=str, nargs=1, metavar="destination_path", default=None, help="stores the zipped joblib files in the specified location")
-
-    parser.add_argument("-g", "--graph", type=str, nargs=1, metavar="graphical_representation", default=None, help="displays and saves the graphical representation of the performance of the model")
 
     parser.add_argument("-m", "--machine", type=str, nargs=1, metavar="computing_resources", default=None, help="shows the computational resources needed to train the model")
 
@@ -142,15 +121,12 @@ def main():
     if args.path != None:
         if args.classify != None:
             classification(args)
-        elif args.clustering != None:
-            clustering(args)
         elif args.selection != None:
             feature_selection(args)
         elif args.regress != None:
             regression(args)
     
     if args.graph != None or args.machine != None:
-        show_graphs(args)
         show_compute(args)
     
 if __name__ == "__main__":
