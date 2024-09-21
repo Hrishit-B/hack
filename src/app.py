@@ -90,6 +90,20 @@ def regression(args):
 
     print("Regression models ran successfully!")
 
+def show_graphs(args):
+    mode = args.graph[0]
+    if mode.lower() == 'print':
+        print("showing graph")
+    elif mode.lower() == 'save':
+        print("saving performance graph...")
+
+def show_compute(args):
+    mode = args.machine[0]
+    if mode.lower() == 'print':
+        print("showing computation graph")
+    elif mode.lower() == 'save':
+        print('saving computation efficiency graphs...')
+
 def main():
 
     program_descripton = f'''
@@ -119,6 +133,10 @@ def main():
 
     parser.add_argument("-d", "--dest", type=str, nargs=1, metavar="destination_path", default=None, help="stores the zipped joblib files in the specified location")
 
+    parser.add_argument("-g", "--graph", type=str, nargs=1, metavar="graphical_representation", default=None, help="displays and saves the graphical representation of the performance of the model")
+
+    parser.add_argument("-m", "--machine", type=str, nargs=1, metavar="computing_resources", default=None, help="shows the computational resources needed to train the model")
+
     args = parser.parse_args()
 
     if args.path != None:
@@ -130,6 +148,10 @@ def main():
             feature_selection(args)
         elif args.regress != None:
             regression(args)
-
+    
+    if args.graph != None or args.machine != None:
+        show_graphs(args)
+        show_compute(args)
+    
 if __name__ == "__main__":
     main()

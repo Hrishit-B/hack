@@ -17,10 +17,6 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, jaccard_score, f1_score
 
-from sklearn.cluster import KMeans, DBSCAN,AgglomerativeClustering
-from sklearn_extra.cluster import KMedoids
-from sklearn.mixture import GaussianMixture
-
 from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif, RFE
 from mlxtend.feature_selection import ExhaustiveFeatureSelector
 
@@ -243,86 +239,6 @@ class Classification:
         self.save_model(model)
         return perf
         
-class Clustering:
-    def __init__(self, dataset_path, output_path):
-        self.dataset_path = dataset_path
-        self.output_path = output_path
-    
-    def load_dataset(self):
-        try:
-            dataset = pd.read_csv(self.dataset_path)
-            return dataset
-        
-        except FileNotFoundError:
-            print("File {} not found".format(self.dataset_path))
-            return None
-        
-        except:
-            print("Some error has occured")
-            return None
-        
-    def preprocessing(self):
-        dataset = self.load_dataset()
-        if dataset is not None:
-            X = dataset.copy()
-
-            scaler = StandardScaler()
-            X_scaled = scaler.fit_transform(X)
-        
-            return X_scaled
-        else:
-            return
-    
-    def save_model(self, model):
-        joblib.dump(model, self.model_path)
-    
-    def k_means_clustering(self):
-        X = self.preprocessing()
-        
-        model = KMeans(init="k-means++", algorithm="elkan", random_state=42)
-        model.fit(X)
-        
-        self.save_model(model)
-        return model.labels_
-
-    def k_medoids_clustering(self):
-        X = self.preprocessing()
-        
-        model = KMedoids(init="k-medoids++", random_state=42)
-        model.fit(X)
-        
-        self.save_model(model)
-        return model.labels_
-
-    def dbscan_clustering(self):
-        X = self.preprocessing()
-        
-        model = DBSCAN(metric="manhattan", algorithm="auto")
-        model.fit(X)
-        
-        self.save_model(model)
-        return model.labels_
-
-
-    def agglomerative_clustering(self):
-        X = self.preprocessing()
-
-        model = AgglomerativeClustering(metric="manhattan", linkage="ward")
-        model.fit(X)
-
-        self.save_model(model)
-        return model.labels_
-
-    def gaussian_mixture_clustering(self):
-        X = self.preprocessing()
-
-        model = GaussianMixture(init_params="k-means++", random_state=42)
-        model.fit(X)
-
-        self.save_model(model)
-        return model.labels_
-
-
 class FeatureSelection:
     def __init__(self,feature_matrix,target_vector):
         self.X = feature_matrix
