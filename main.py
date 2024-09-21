@@ -24,7 +24,8 @@ from sklearn.mixture import GaussianMixture
 from sklearn.metrics.cluster import contingency_matrix
 from sklearn.metrics import adjusted_mutual_info_score, adjusted_rand_score, calinski_harabasz_score, completeness_score, davies_bouldin_score, fowlkes_mallows_score, homogeneity_score, mutual_info_score, normalized_mutual_info_score, rand_score, silhouette_score, v_measure_score
 
-from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif, RFE, ExhaustiveFeatureSelector
+from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif, RFE
+from mlxtend.feature_selection import ExhaustiveFeatureSelector
 
 class Regression:
     def __init__(self, dataset_path, target_variable, output_path):
