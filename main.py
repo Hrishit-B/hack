@@ -22,7 +22,8 @@ from sklearn.cluster import KMeans, DBSCAN,AgglomerativeClustering
 from sklearn_extra.cluster import KMedoids
 from sklearn.mixture import GaussianMixture
 
-from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif, RFE, ExhaustiveFeatureSelector
+from sklearn.feature_selection import VarianceThreshold, SelectKBest, chi2, mutual_info_classif, f_classif, RFE
+from mlxtend.feature_selection import ExhaustiveFeatureSelector
 
 class Regression:
     def __init__(self, dataset_path, target_variable, output_path, performance):
