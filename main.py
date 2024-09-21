@@ -80,19 +80,9 @@ class Regression:
         model.fit(X_train, y_train)  
         y_pred = model.predict(X_test)
 
-        self.performance_evaluation("LinearRegression", y_test, y_pred)
+        perf = self.performance_evaluation("LinearRegression", y_test, y_pred)
         self.save_model(model)
-
-    def polynomial_regression(self):
-        X_train, X_test, y_train, y_test = self.preprocessing()
-        
-        model = PolynomialFeatures(degree=3)
-        X_poly = model.fit_transform(X_train)
-        model.fit(X_poly, y_train)
-        y_pred = model.predict(X_test)
-
-        self.performance_evaluation("PolynomialFeatures", y_test, y_pred)
-        self.save_model(model)
+        return perf
     
     def lasso_regression(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -101,8 +91,9 @@ class Regression:
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
-        self.performance_evaluation("Lasso", y_test, y_pred)
+        perf = self.performance_evaluation("Lasso", y_test, y_pred)
         self.save_model(model)
+        return perf
 
     def decision_tree_regressor(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -111,8 +102,9 @@ class Regression:
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
-        self.performance_evaluation("DecisionTreeRegressor", y_test, y_pred)
+        perf = self.performance_evaluation("DecisionTreeRegressor", y_test, y_pred)
         self.save_model(model)
+        return perf
 
     def random_forest_regressor(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -121,8 +113,9 @@ class Regression:
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
 
-        self.performance_evaluation("RandomForestRegressor", y_test, y_pred)
+        perf = self.performance_evaluation("RandomForestRegressor", y_test, y_pred)
         self.save_model(model)
+        return perf
 
     def gradient_boosting_regressor(self):
         X_train, X_test, y_train, y_test = self.preprocessing()
@@ -131,8 +124,9 @@ class Regression:
         model.fit(X_train, y_train) 
         y_pred = model.predict(X_test)
 
-        self.performance_evaluation("GradientBoostingRegressor", y_test, y_pred)
+        perf = self.performance_evaluation("GradientBoostingRegressor", y_test, y_pred)
         self.save_model(model)
+        return perf
 
 class Classification:
     def __init__(self, dataset_path, target_variable, output_path):
