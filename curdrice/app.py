@@ -136,7 +136,8 @@
 
 import os
 import click
-from run import *
+import pandas as pd
+from curdrice.test import *
 import textwrap
 
 INVALID_FILETYPE_MSG = "Error: Invalid file format. %s must be a .csv file."
@@ -235,19 +236,28 @@ def compute():
     print('saving computation efficiency graphs...')
 
 
-if __name__ == "__main__":
-    program_description = textwrap.dedent('''
-        Team Name : machinenotlearning
+def curdrice():
+    print('''
+                                             __            __                     
+                                            /  |          /  |                    
+          _______  __    __   ______    ____$$ |  ______  $$/   _______   ______  
+         /       |/  |  /  | /      \  /    $$ | /      \ /  | /       | /      \ 
+        /$$$$$$$/ $$ |  $$ |/$$$$$$  |/$$$$$$$ |/$$$$$$  |$$ |/$$$$$$$/ /$$$$$$  |
+        $$ |      $$ |  $$ |$$ |  $$/ $$ |  $$ |$$ |  $$/ $$ |$$ |      $$    $$ |
+        $$ \_____ $$ \__$$ |$$ |      $$ \__$$ |$$ |      $$ |$$ \_____ $$$$$$$$/ 
+        $$       |$$    $$/ $$ |      $$    $$ |$$ |      $$ |$$       |$$       |
+         $$$$$$$/  $$$$$$/  $$/        $$$$$$$/ $$/       $$/  $$$$$$$/  $$$$$$$/ 
+         
+         ''')
+    program_description = f''' 
+        \n
+        Team Name : machinenotlearning \n
+        Project Idea : \n
 
-        Project Idea :
-
-        Automation of the complete machine learning workflow:
-        The main goal is to simplify the machine learning workflow for users with different levels of 
-        expertise, through a CLI app. We ask the user for certain inputs like the dataset file or folder, 
-        and the type of ML problem and target variable (if necessary). We then perform standard data preprocessing (not dataset specific) 
-        and feature selection (if necessary), and train relevant models for the data and present a comparative analysis 
-        of the models trained, along with downloadable model weight files in the joblib format.
-    ''')
+        Automation of the complete machine learning workflow: \n
+        The main goal is to simplify the machine learning workflow for users with different levels of expertise, through a CLI app. We ask the user for certain inputs like the dataset file or folder, and the type of ML problem and target variable (if necessary). \n
+        We then perform standard data preprocessing (not dataset specific) and feature selection (if necessary), and train relevant models for the data and present a comparative analysis of the models trained, along with downloadable model weight files in the joblib format.
+    '''
     
     cli.help = program_description
     cli()
