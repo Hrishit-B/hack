@@ -194,9 +194,12 @@ def analyze_classify():
 @click.pass_context
 def select(ctx, feature_matrix, target_vector):
     """Performs feature selection task on the dataset"""
-    # input_path = ctx.obj['path']
-    # output_path = ctx.obj['dest']
-    # fs = automationizer.FeatureSelection(input_path, feature_matrix, target_vector, output_path)
+    input_path = ctx.obj['path']
+
+    print("dataset loaded!")
+
+    feature_selection_testing(input_path, feature_matrix, target_vector)
+
     print("Feature Selection models ran successfully!")
 
 @cli.command()
@@ -232,7 +235,7 @@ def analyze_regress():
 @cli.command()
 def compute():
     """Shows the computational resources needed to train the model"""
-    print('saving computation efficiency graphs...')
+    print('This feature is currently not available...')
 
 
 if __name__ == "__main__":

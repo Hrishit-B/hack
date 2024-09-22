@@ -150,3 +150,35 @@ def classification_testing(dataset_path, target_variable, files, zip_name):
 
     result_classification()
     zip_compile()
+
+def feature_selection_testing(dataset_path, feature_matrix, target_vector, features):
+    def variance_threshold_selector_testing(dataset_path, feature_matrix, target_vector, features):
+        fs = FeatureSelection(dataset_path, feature_matrix, target_vector)
+        x = fs.variance_threshold_selector()
+        features['variance threshold'] = x
+        
+    def chi_square_selector_testing(dataset_path, feature_matrix, target_vector, features):
+        fs = FeatureSelection(dataset_path, feature_matrix, target_vector)
+        x = fs.chi_square_selector()
+        features['chi square'] = x
+        
+    def mutual_information_selector_testing(dataset_path, feature_matrix, target_vector, features):
+        fs = FeatureSelection(dataset_path, feature_matrix, target_vector)
+        x = fs.mutual_information_selector()
+        features['mutual information'] = x
+
+    def anova_selector_testing(dataset_path, feature_matrix, target_vector, features):
+        fs = FeatureSelection(dataset_path, feature_matrix, target_vector)
+        x = fs.anova_selector()
+        features['anova'] = x
+
+    features = dict()
+    def result_feature_selction():
+        variance_threshold_selector_testing(dataset_path, feature_matrix, target_vector, dict())
+        chi_square_selector_testing(dataset_path, feature_matrix, target_vector, dict())
+        mutual_information_selector_testing(dataset_path, feature_matrix, target_vector, dict())
+        anova_selector_testing(dataset_path, feature_matrix, target_vector, dict())
+
+        print(features)
+
+    result_feature_selction()

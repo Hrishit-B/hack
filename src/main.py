@@ -246,29 +246,29 @@ class FeatureSelection:
         self.X = feature_matrix
         self.y = target_vector
         
-    def variance_threshold_selector(self, X):
+    def variance_threshold_selector(self):
         selector = VarianceThreshold()
-        X_high_variance = selector.fit_transform(X)
+        X_high_variance = selector.fit_transform(self.X)
         return X_high_variance
     
-    def chi_square_selector(self,X, y):
+    def chi_square_selector(self):
         selector = SelectKBest(chi2)
-        X_selected = selector.fit_transform(X, y)
+        X_selected = selector.fit_transform(self.X, self.y)
         return X_selected
     
-    def mutual_information_selector(self, X, y):
+    def mutual_information_selector(self):
         selector = SelectKBest(mutual_info_classif)
-        X_selected = selector.fit_transform(X, y)
+        X_selected = selector.fit_transform(self.X, self.y)
         return X_selected
     
-    def anova_selector(self, X, y):
+    def anova_selector(self):
         selector = SelectKBest(f_classif)
-        X_selected = selector.fit_transform(X, y)
+        X_selected = selector.fit_transform(self.X, self.y)
         return X_selected
     
-    def lasso_selector(self, X, y):
+    def lasso_selector(self):
         model = Lasso()
-        model.fit(X, y)
+        model.fit(self.X, self.y)
         selected_features = np.where(model.coef_ != 0)[0]
         return X[:, selected_features], selected_features
     
