@@ -35,5 +35,5 @@ Find out which ML model suits your needs by installing our package using pip
 
 - [@hrishitb](https://www.github.com/Hrishit-B)
 - [@pranayobla](https://www.github.com/pranay-obla)
-- [@shriharik](https://www.github.com/RiriSensei)
+- [@shriharik](https://github.com/shrihari808)
 - [@ankitthomas](https://www.github.com/AlmondBox-3996)
